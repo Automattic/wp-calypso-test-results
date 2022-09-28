@@ -1,0 +1,19 @@
+"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
+"passed","Wed Sep 28 18:01:30 GMT 2022","Wed Sep 28 18:01:31 GMT 2022","1108","","home > teamcity-0 > buildAgent > work > c4a9d5b38c1dacde > test > e2e > specs > infrastructure","infrastructure__ssr-enabled.ts","","","Check endpoint: https://wordpress.com/theme/twentytwenty","
+### Test
+```typescript
+() => test(...params)
+```
+"
+"passed","Wed Sep 28 18:01:29 GMT 2022","Wed Sep 28 18:01:29 GMT 2022","519","","home > teamcity-0 > buildAgent > work > c4a9d5b38c1dacde > test > e2e > specs > infrastructure","infrastructure__ssr-enabled.ts","","","Check endpoint: https://wordpress.com/log-in","
+### Test
+```typescript
+() => test(...params)
+```
+"
+"passed","Wed Sep 28 18:01:29 GMT 2022","Wed Sep 28 18:01:30 GMT 2022","692","","home > teamcity-0 > buildAgent > work > c4a9d5b38c1dacde > test > e2e > specs > infrastructure","infrastructure__ssr-enabled.ts","","","Check endpoint: https://wordpress.com/themes","
+### Test
+```typescript
+() => test(...params)
+```
+"
