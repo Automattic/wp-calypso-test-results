@@ -38,16 +38,16 @@ jobs:
         with:
           allure_results: data
           gh_pages: gh-pages
-          allure_report: allure-report
-          allure_history: allure-history
-          keep_reports: 20
+          allure_report: docs/pre-release/allure-report
+          allure_history: docs/pre-release/allure-history
+          keep_reports: 50
       - name: Deploy report to Github Pages
-        if: always()
+#         if: always()
         uses: peaceiris/actions-gh-pages@v2
         env:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: allure-history
+          PUBLISH_DIR: docs/pre-release/allure-history
           
           
 #   # Build job
