@@ -25,10 +25,31 @@ jobs:
   build_report:
     runs-on: ubuntu-latest
     steps:
-      - name: Install allure-commandline package
-        run: npm install -g allure-commandline
-      - name: Generate Allure report
-        run: allure generate --clean ./data/17/ --output ./docs/report/
+      - name: Get Allure history
+        uses: actions/checkout@v2
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+      - name: Test action
+        uses: simple-elf/allure-report-action@v1.6
+        if: always()
+        id: allure-report
+        with:
+          allure_results: data/17
+          gh_pages: gh-pages
+          allure_report: docs/pre-release-report
+          allure_history: docs/pre-release-history
+          keep_reports: 20
+      - name: Deploy report to Github Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v2
+        env:
+          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PUBLISH_BRANCH: gh-pages
+          PUBLISH_DIR: allure-history
+
   # Build job
   build:
     runs-on: ubuntu-latest
@@ -56,3 +77,5 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
+        env:
+          PUBLISH_DIR: docs/pre-release-history
