@@ -21,6 +21,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Build report
+  build_report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install allure-commandline package
+        run: npm install -g allure-commandline
+      - name: Generate Allure report
+        run: allure generate --clean ./data/17/ --output ./docs/report/
   # Build job
   build:
     runs-on: ubuntu-latest
