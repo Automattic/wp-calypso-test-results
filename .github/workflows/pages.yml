@@ -37,16 +37,17 @@ jobs:
         if: always()
         id: allure-report
         with:
-          allure_results: data/17
+          allure_results: ../../data/17
           gh_pages: gh-pages
-          allure_report: docs/pre-release-report
-          allure_history: docs/pre-release-history
+          allure_report: ../../docs/pre-release-report
+          allure_history: ../../docs/pre-release-history
           keep_reports: 20
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
         env:
           PUBLISH_DIR: docs/pre-release-history
+          PUBLISH_BRANCH: trunk
 #   # Build job
 #   build:
 #     runs-on: ubuntu-latest
