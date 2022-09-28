@@ -39,13 +39,11 @@ jobs:
           allure_report: docs/allure-report
           allure_history: docs/allure-history
           keep_reports: 20
-#       - name: Deploy report to Github Pages
-#         if: always()
-#         uses: peaceiris/actions-gh-pages@v2
-#         env:
-#           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#           PUBLISH_BRANCH: gh-pages
-#           PUBLISH_DIR: allure-history
+      - name: Add & Commit
+        uses: EndBug/add-and-commit@v9.1.0
+        with:
+          add: docs/
+          push: true
              
   # Build job
   build:
