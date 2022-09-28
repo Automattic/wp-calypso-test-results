@@ -1,0 +1,52 @@
+{
+  "uid" : "98d3104e051c652961429bf95fa0b5d6",
+  "children" : [ {
+    "name" : "home > teamcity-0 > buildAgent > work > c4a9d5b38c1dacde > test > e2e > specs > infrastructure",
+    "children" : [ {
+      "name" : "infrastructure__ssr-enabled.ts",
+      "children" : [ {
+        "name" : "Check endpoint: https://wordpress.com/log-in",
+        "uid" : "93271930bfc8a6f4",
+        "parentUid" : "374d8aeb73f726cc5f4036ba4f7a0511",
+        "status" : "passed",
+        "time" : {
+          "start" : 1664388089011,
+          "stop" : 1664388089530,
+          "duration" : 519
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "parameters" : [ ]
+      }, {
+        "name" : "Check endpoint: https://wordpress.com/themes",
+        "uid" : "1101d7307e0380ae",
+        "parentUid" : "374d8aeb73f726cc5f4036ba4f7a0511",
+        "status" : "passed",
+        "time" : {
+          "start" : 1664388089534,
+          "stop" : 1664388090226,
+          "duration" : 692
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "parameters" : [ ]
+      }, {
+        "name" : "Check endpoint: https://wordpress.com/theme/twentytwenty",
+        "uid" : "3fe7d6712d078f24",
+        "parentUid" : "374d8aeb73f726cc5f4036ba4f7a0511",
+        "status" : "passed",
+        "time" : {
+          "start" : 1664388090227,
+          "stop" : 1664388091335,
+          "duration" : 1108
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "parameters" : [ ]
+      } ],
+      "uid" : "374d8aeb73f726cc5f4036ba4f7a0511"
+    } ],
+    "uid" : "8d5c82653c6c1b5ad5ea5e6a583a72df"
+  } ],
+  "name" : "suites"
+}

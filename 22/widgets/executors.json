@@ -1,0 +1,10 @@
+[ {
+  "name" : "GitHub Actions",
+  "type" : "github",
+  "url" : "https://Automattic.github.io/wp-calypso-test-results",
+  "buildOrder" : 22,
+  "buildName" : "GitHub Actions Run #3147304506",
+  "buildUrl" : "https://github.com/Automattic/wp-calypso-test-results/actions/runs/3147304506",
+  "reportName" : "Allure Report with history",
+  "reportUrl" : "https://Automattic.github.io/wp-calypso-test-results/22/"
+} ]
