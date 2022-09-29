@@ -43,19 +43,20 @@ jobs:
         run: |
           # LATEST_RESULT=$(ls -t */ | head -n1)
           LATEST_RESULT=$(ls -f  | cut -d_ -f3 | sort -n | tail -1)
-          echo $LATEST_RESULT
-          
           echo "LATEST_ALLURE_RESULT=$LATEST_RESULT" >> $GITHUB_ENV
       - name: Generate report with history
+        working-directory: repo
         env:
           ALLURE_RESULTS_DATA_BASE_PATH: ${{github.workspace}}/data
         run: |
-          echo ${{env.LATEST_ALLURE_RESULT}}
+          echo "latest allure result dir" ${{env.LATEST_ALLURE_RESULT}}
           
-          echo $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history && mkdir -p $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
+          echo "history dir in latest allure results dir" $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
+          mkdir -p $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
+          ls -la $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/
           
-          echo $EXISTING_REPORT_PATH/history/*
-          echo $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
+          echo "current report history path" $EXISTING_REPORT_PATH/history/*
+          ls -la $EXISTING_REPORT_PATH/history
           
           cp -R $EXISTING_REPORT_PATH/history/ $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
           allure generate --clean $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT --output $OUTPUT_PATH
