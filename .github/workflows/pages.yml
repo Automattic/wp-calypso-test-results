@@ -31,12 +31,12 @@ jobs:
       - name: Install allure-commandline package
         run: npm install -g allure-commandline
       
-#       - name: Checkout this repo
-#         uses: actions/checkout@v3
-#         with:
-#           path: repo
-#           token: ${{ secrets.GITHUB_TOKEN }}
-#           ref: ${{ github.ref_name }}
+      - name: Checkout this repo
+        uses: actions/checkout@v3
+        with:
+          path: repo
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.ref_name }}
           
       - name: Locate newest Allure results
         working-directory: repo/data
@@ -57,7 +57,7 @@ jobs:
           echo $EXISTING_REPORT_PATH/history/*
           echo $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
           
-          cp -R $EXISTING_REPORT_PATH/history/* $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
+          cp -R $EXISTING_REPORT_PATH/history/ $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
           allure generate --clean $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT --output $OUTPUT_PATH
       - name: Push changes to branch
         working-directory: repo
