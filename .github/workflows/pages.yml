@@ -46,4 +46,15 @@ jobs:
           NEW_ALLURE_RESULTS_PATH=/some/path/$(ls -t data/*/ | head -1)
           echo $NEW_ALLURE_RESULTS_PATH
           bash ./scripts/regenerate-report.sh
-          
+      - name: Push changes to branch
+        working-directory: repo
+        env:
+          GITHUB_USER: ${{ secrets.REPORTS_USER }}
+          GITHUB_EMAIL: ${{ secrets.REPORTS_EMAIL }}
+          GITHUB_TOKEN: ${{ secrets.REPORTS_TOKEN }}
+          BOT_COMMIT_MESSAGE: "regenerated report using data from ${{env.NEW_ALLURE_RESULTS_PATH}}"
+        run: |
+          git config user.name $GITHUB_USER
+          git config user.email $GITHUB_EMAIL
+          git add .
+          git commit -m "GitHub Actions: ${{env.BOT_COMMIT_MESSAGE}}"
