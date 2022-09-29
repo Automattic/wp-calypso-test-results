@@ -42,6 +42,7 @@ jobs:
         run: |
           LATEST_RESULT=$(ls -f  | cut -d_ -f3 | sort -n | tail -1)
           echo "LATEST_ALLURE_RESULT=$LATEST_RESULT" >> $GITHUB_ENV
+          
       - name: Generate report with history
         working-directory: repo
         env:
@@ -57,12 +58,13 @@ jobs:
           echo "workspace"
           ls -la ${{github.workspace}}
           echo "workspace docs"
-          ls -la ${{github.workspace}}/docs
+          ls -la ${{github.workspace}}/repo/docs
           echo "workspace docs report "
-          ls -la ${{github.workspace}}/docs/report
+          ls -la ${{github.workspace}}/repo/docs/report
           
           cp -R $REPORT_PATH/history/ $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
           allure generate --clean $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT --output $OUTPUT_PATH
+          
       - name: Push changes to branch
         env:
           GITHUB_USER: ${{ secrets.REPORTS_USER }}
