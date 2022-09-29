@@ -41,7 +41,7 @@ jobs:
       - name: Locate newest Allure results
         working-directory: repo/data
         run: |
-          LATEST_ALLURE_RESULTS_PATH=$(ls -t data/*/ | head -1)
+          LATEST_ALLURE_RESULTS_PATH=$(ls -t ./*/ | head -1)
           echo "NEW_ALLURE_RESULTS_PATH=${{github.workspace}}/data/$LATEST_ALLURE_RESULTS_PATH" >> $GITHUB_ENV
       - name: Generate report with history
         working-directory: repo
