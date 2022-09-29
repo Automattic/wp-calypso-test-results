@@ -38,6 +38,6 @@ jobs:
         working-directory: repo
         env:
           EXISTING_REPORT_PATH: ${{ github.workspace }}/docs/report
-          NEW_ALLURE_RESULTS_PATH: ${{ github.workspace }}/$(echo $(ls -t data/*/ | head -1))
+          NEW_ALLURE_RESULTS_PATH: ${{ github.workspace }}/$(ls -t data/*/ | head -1)
           OUTPUT_PATH: ${{ github.workspace }}/docs/report
         run: echo $NEW_ALLURE_RESULTS_PATH
