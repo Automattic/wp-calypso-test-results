@@ -20,7 +20,6 @@ concurrency:
 env:
   EXISTING_REPORT_PATH: ${{ github.workspace }}/docs/report
   OUTPUT_PATH: ${{ github.workspace }}/docs/report
-  NEW_ALLURE_RESULTS_PATH: ""
   
 jobs:
   publish_pr_test_reports:
@@ -46,3 +45,5 @@ jobs:
         run: |
           NEW_ALLURE_RESULTS_PATH=/some/path/$(ls -t data/*/ | head -1)
           echo $NEW_ALLURE_RESULTS_PATH
+          bash ./scripts/regenerate-report.sh
+          
