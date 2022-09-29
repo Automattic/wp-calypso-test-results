@@ -1,1 +1,1 @@
-{"total":1,"items":[{"uid":"5abcfb8d53389867e371e02c1cdb6de6","name":"home > teamcity-2 > buildAgent > work > c4a9d5b38c1dacde > test > e2e > specs > infrastructure","statistic":{"failed":0,"broken":3,"skipped":0,"passed":0,"unknown":0,"total":3}}]}
+{"total":1,"items":[{"uid":"7dece2a1377a12f0b79fad41cb9bdced","name":"home > teamcity-3 > buildAgent > work > c4a9d5b38c1dacde > test > e2e > specs > infrastructure","statistic":{"failed":0,"broken":3,"skipped":0,"passed":0,"unknown":0,"total":3}}]}
