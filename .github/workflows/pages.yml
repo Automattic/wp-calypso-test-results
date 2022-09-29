@@ -47,7 +47,6 @@ jobs:
           
           echo "LATEST_ALLURE_RESULT=$LATEST_RESULT" >> $GITHUB_ENV
       - name: Generate report with history
-        working-directory: repo
         env:
           ALLURE_RESULTS_DATA_BASE_PATH: ${{github.workspace}}/data
         run: |
@@ -61,7 +60,6 @@ jobs:
           cp -R $EXISTING_REPORT_PATH/history/ $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
           allure generate --clean $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT --output $OUTPUT_PATH
       - name: Push changes to branch
-        working-directory: repo
         env:
           GITHUB_USER: ${{ secrets.REPORTS_USER }}
           GITHUB_EMAIL: ${{ secrets.REPORTS_EMAIL }}
