@@ -43,11 +43,13 @@ jobs:
         run: |
           LATEST_ALLURE_RESULTS_PATH=$(ls -t ./*/ | head -1)
           echo "NEW_ALLURE_RESULTS_PATH=${{github.workspace}}/data/$LATEST_ALLURE_RESULTS_PATH" >> $GITHUB_ENV
+          echo ${{env.NEW_ALLURE_RESULTS_PATH}}
       - name: Generate report with history
         working-directory: repo
         run: |
+          echo ${{env.NEW_ALLURE_RESULTS_PATH}}
           mkdir -p $NEW_ALLURE_RESULTS_PATH/history
-          cp -r "$EXISTING_REPORT_PATH/history/"* $NEW_ALLURE_RESULTS_PATH/history
+          cp -R $EXISTING_REPORT_PATH/history/* $NEW_ALLURE_RESULTS_PATH/history
           allure generate --clean $NEW_ALLURE_RESULTS_PATH --output $OUTPUT_PATH
       - name: Push changes to branch
         working-directory: repo
