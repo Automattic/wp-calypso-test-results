@@ -18,8 +18,7 @@ concurrency:
   cancel-in-progress: true
   
 env:
-  EXISTING_REPORT_PATH: ${{ github.workspace }}/docs/report
-  OUTPUT_PATH: ${{ github.workspace }}/docs/report
+  REPORT_PATH: ${{ github.workspace }}/docs/report
   
 jobs:
   publish_pr_test_reports:
@@ -41,7 +40,6 @@ jobs:
       - name: Locate newest Allure results
         working-directory: repo/data
         run: |
-          # LATEST_RESULT=$(ls -t */ | head -n1)
           LATEST_RESULT=$(ls -f  | cut -d_ -f3 | sort -n | tail -1)
           echo "LATEST_ALLURE_RESULT=$LATEST_RESULT" >> $GITHUB_ENV
       - name: Generate report with history
@@ -55,10 +53,11 @@ jobs:
           mkdir -p $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
           ls -la $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/
           
-          echo "current report history path" $EXISTING_REPORT_PATH/history/*
-          ls -la $EXISTING_REPORT_PATH/history
+          echo "current report history path" $REPORT_PATH/history/*
+          ls -la $REPORT_PATH
+          ls -la $
           
-          cp -R $EXISTING_REPORT_PATH/history/ $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
+          cp -R $REPORT_PATH/history/ $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
           allure generate --clean $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT --output $OUTPUT_PATH
       - name: Push changes to branch
         env:
