@@ -33,9 +33,9 @@ jobs:
       - name: Checkout this repo
         uses: actions/checkout@v3
         with:
-#           path: repo
+          path: repo
           token: ${{ secrets.GITHUB_TOKEN }}
-          ref: ${{ github.ref_name }}
+          ref: 'trunk'
           
       - name: Locate newest Allure results
         working-directory: repo/data
