@@ -41,7 +41,8 @@ jobs:
       - name: Locate newest Allure results
         working-directory: repo/data
         run: |
-          LATEST_RESULT=$(ls -t */ | head -n1)
+          # LATEST_RESULT=$(ls -t */ | head -n1)
+          LATEST_RESULT=$(ls -f  | cut -d_ -f3 | sort -n | tail -1)
           echo $LATEST_RESULT
           
           echo "LATEST_ALLURE_RESULT=$LATEST_RESULT" >> $GITHUB_ENV
