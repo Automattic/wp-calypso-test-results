@@ -62,7 +62,12 @@ jobs:
           
           cp -R $REPORT_PATH/history/ $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
           allure generate --clean $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT --output $REPORT_PATH
-          
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          # Upload the generated report
+          path: ${{env.REPORT_PATH}}
+
 #       - name: Push changes to trunk
 #         uses: EndBug/add-and-commit@v9 # You can change this to use a specific version.
 #         env:
@@ -74,15 +79,22 @@ jobs:
 
   publish:
     name: Publish
+    needs: generate_allure_report
     runs-on: ubuntu-latest
+
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+      
     steps:
       - name: Setup Pages
         uses: actions/configure-pages@v2
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
-        with:
-          # Upload the generated report
-          path: ${{env.REPORT_PATH}}
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
