@@ -46,7 +46,7 @@ jobs:
           NEW_ALLURE_RESULTS_PATH=data/$(ls -t data/*/ | head -1)
           echo $NEW_ALLURE_RESULTS_PATH
           mkdir -p $NEW_ALLURE_RESULTS_PATH/history
-          cp -r $EXISTING_REPORT_PATH/history/* $NEW_ALLURE_RESULTS_PATH/history
+          cp -r "$EXISTING_REPORT_PATH/history/"* $NEW_ALLURE_RESULTS_PATH/history
           allure generate --clean $NEW_ALLURE_RESULTS_PATH --output $OUTPUT_PATH
       - name: Push changes to branch
         working-directory: repo
