@@ -1,40 +1,43 @@
-name: allure-report
+# Sample workflow for building and deploying a Jekyll site to GitHub Pages
+name: Generate updated Allure report
 
 on:
-  release:
-    types:
-      - created
+  # Runs on pushes targeting the default branch
   push:
-    branches-ignore:
-      - '!trunk'
+    branches: ["trunk"]
 
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+# permissions: write-all
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+  
 jobs:
-  allure:
-    name: Generate Allure Report
+  publish_pr_test_reports:
+    name: Publish Pre-Release Allure reports
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Get Allure history
+      - name: Install allure-commandline package
+        run: npm install -g allure-commandline
+      
+      - name: Checkout this repo
         uses: actions/checkout@v3
-        if: always()
-        continue-on-error: true
         with:
-          ref: gh-pages
-          path: gh-pages
-
-      - name: Allure Report action from marketplace
-        uses: simple-elf/allure-report-action@v1.6
-        if: always()
-        with:
-          allure_results: allure-results
-          allure_history: allure-history
-          keep_reports: 20
-
-      - name: Deploy report to Github Pages
-        if: always()
-        uses: peaceiris/actions-gh-pages@v2
+          path: repo
+          token: ${{ secrets.REPORTS_TOKEN }}
+          ref: ${{ github.ref_name }}
+          
+      - name: Generate report with history
+        working-directory: repo
         env:
-          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: allure-history
+          EXISTING_REPORT_PATH: ${{ github.workspace }}/docs/report
+          NEW_ALLURE_RESULTS_PATH: ${{ github.workspace }}/$(echo $(ls -t data/*/ | head -1))
+          OUTPUT_PATH: ${{ github.workspace }}/docs/report
+        run: echo $NEW_ALLURE_RESULTS_PATH
