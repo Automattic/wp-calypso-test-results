@@ -42,5 +42,5 @@ jobs:
           OUTPUT_PATH: ${{ github.workspace }}/docs/report
         run: | 
           LATEST_DATA="${{ github.workspace }}"
-          echo "LATEST_DATA=${LATEST_DATA}" >> $NEW_ALLURE_RESULTS_PATH
+          echo "LATEST_DATA=${LATEST_DATA}" >> "$NEW_ALLURE_RESULTS_PATH"
           echo $NEW_ALLURE_RESULTS_PATH
