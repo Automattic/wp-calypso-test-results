@@ -44,7 +44,7 @@ jobs:
           LATEST_ALLURE_RESULTS_PATH=$(ls -t */ | head -1)
           echo $LATEST_ALLURE_RESULTS_PATH
           
-          echo "NEW_ALLURE_RESULTS_PATH=${pwd}/$LATEST_ALLURE_RESULTS_PATH" >> $GITHUB_ENV
+          echo "NEW_ALLURE_RESULTS_PATH=$(pwd)/$LATEST_ALLURE_RESULTS_PATH" >> $GITHUB_ENV
       - name: Generate report with history
         working-directory: repo
         run: |
