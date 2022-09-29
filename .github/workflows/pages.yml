@@ -44,5 +44,5 @@ jobs:
         env:
           NEW_RESULTS_BASE_PATH: ${{ github.workspace }}/
         run: |
-          echo "NEW_RESULTS_BASE_PATH=${{ github.workspace }}/$(ls -t data/*/ | head -1)" >> $NEW_ALLURE_RESULTS_PATH
+          NEW_ALLURE_RESULTS_PATH=/some/path/$(ls -t data/*/ | head -1)
           echo $NEW_ALLURE_RESULTS_PATH
