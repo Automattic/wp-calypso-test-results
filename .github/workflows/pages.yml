@@ -43,7 +43,7 @@ jobs:
         env:
           NEW_RESULTS_BASE_PATH: ${{ github.workspace }}/
         run: |
-          NEW_ALLURE_RESULTS_PATH=/some/path/$(ls -t data/*/ | head -1)
+          NEW_ALLURE_RESULTS_PATH=data/$(ls -t data/*/ | head -1)
           echo $NEW_ALLURE_RESULTS_PATH
           mkdir -p $NEW_ALLURE_RESULTS_PATH/history
           cp -r $EXISTING_REPORT_PATH/history/* $NEW_ALLURE_RESULTS_PATH/history
