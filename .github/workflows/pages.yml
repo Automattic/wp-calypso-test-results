@@ -54,8 +54,12 @@ jobs:
           ls -la $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/
           
           echo "current report history path" $REPORT_PATH/history/*
-          ls -la $REPORT_PATH
-          ls -la $
+          echo "workspace"
+          ls -la ${{github.workspace}}
+          echo "workspace docs"
+          ls -la ${{github.workspace}}/docs
+          echo "workspace docs report "
+          ls -la ${{github.workspace}}/docs/report
           
           cp -R $REPORT_PATH/history/ $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
           allure generate --clean $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT --output $OUTPUT_PATH
