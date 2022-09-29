@@ -72,10 +72,11 @@ jobs:
           GITHUB_USER: ${{ secrets.REPORTS_USER }}
           GITHUB_EMAIL: ${{ secrets.REPORTS_EMAIL }}
           GITHUB_TOKEN: ${{ secrets.REPORTS_TOKEN }}
-          BOT_COMMIT_MESSAGE: "regenerated report using data from ${{github.event_name}}"
+          BOT_COMMIT_MESSAGE: "regenerated report using data from run ${{env.LATEST_ALLURE_RESULT}}"
         run: |
           echo $BOT_COMMIT_MESSAGE
           git config user.name ${{env.GITHUB_USER}}
           git config user.email ${{env.GITHUB_EMAIL}}
           git add docs/report
           git commit -m "GitHub Actions: ${{env.BOT_COMMIT_MESSAGE}}"
+          git push
