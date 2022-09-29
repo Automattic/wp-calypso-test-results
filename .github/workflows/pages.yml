@@ -33,7 +33,6 @@ jobs:
       - name: Checkout this repo
         uses: actions/checkout@v3
         with:
-#           path: repo
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: 'trunk'
           
@@ -50,10 +49,12 @@ jobs:
         run: |
           echo "latest allure result dir" ${{env.LATEST_ALLURE_RESULT}}
           
+          # Debugging stuff
           echo "history dir in latest allure results dir" $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
-          mkdir -p $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
-          ls -la $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/
           
+          mkdir -p $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
+          
+          # Debugging stuff
           echo "current report history path" $REPORT_PATH/history/*
           echo "workspace"
           ls -la ${{github.workspace}}
@@ -63,15 +64,17 @@ jobs:
           ls -la ${{github.workspace}}/docs/report
           
           cp -R $REPORT_PATH/history/ $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
-          allure generate --clean $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT --output $OUTPUT_PATH
+          allure generate --clean $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT --output $REPORT_PATH
           
       - name: Push changes to branch
+        working-directory: ${{github.workspace}}
         env:
           GITHUB_USER: ${{ secrets.REPORTS_USER }}
           GITHUB_EMAIL: ${{ secrets.REPORTS_EMAIL }}
           GITHUB_TOKEN: ${{ secrets.REPORTS_TOKEN }}
           BOT_COMMIT_MESSAGE: "regenerated report using data from ${{github.event_name}}"
         run: |
+          echo $BOT_COMMIT_MESSAGE
           git config user.name ${{env.GITHUB_USER}}
           git config user.email ${{env.GITHUB_EMAIL}}
           git add docs/report
