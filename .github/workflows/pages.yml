@@ -17,6 +17,11 @@ concurrency:
   group: "pages"
   cancel-in-progress: true
   
+env:
+  EXISTING_REPORT_PATH: ${{ github.workspace }}/docs/report
+  OUTPUT_PATH: ${{ github.workspace }}/docs/report
+  NEW_ALLURE_RESULTS_PATH: ""
+  
 jobs:
   publish_pr_test_reports:
     name: Publish Pre-Release Allure reports
@@ -37,10 +42,7 @@ jobs:
       - name: Generate report with history
         working-directory: repo
         env:
-          EXISTING_REPORT_PATH: ${{ github.workspace }}/docs/report
-#           NEW_ALLURE_RESULTS_PATH: ${{ github.workspace }}/data
-          OUTPUT_PATH: ${{ github.workspace }}/docs/report
-        run: | 
-          LATEST_DATA="${{ github.workspace }}"
-          echo "LATEST_DATA=${LATEST_DATA}" >> "$NEW_ALLURE_RESULTS_PATH"
+          NEW_RESULTS_BASE_PATH: ${{ github.workspace }}/
+        run: |
+          echo "NEW_RESULTS_BASE_PATH=${{ github.workspace }}/$(ls -t data/*/ | head -1)" >> $NEW_ALLURE_RESULTS_PATH
           echo $NEW_ALLURE_RESULTS_PATH
