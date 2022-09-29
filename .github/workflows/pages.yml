@@ -41,17 +41,21 @@ jobs:
       - name: Locate newest Allure results
         working-directory: repo/data
         run: |
-          LATEST_ALLURE_RESULTS_PATH=$(ls -t */ | head -1)
-          echo $LATEST_ALLURE_RESULTS_PATH
+          LATEST_RESULT=$(ls -t */ | head -n1)
+          echo $LATEST_RESULT
           
-          echo "NEW_ALLURE_RESULTS_PATH=$(pwd)/$LATEST_ALLURE_RESULTS_PATH" >> $GITHUB_ENV
+          echo "LATEST_ALLURE_RESULT=$LATEST_RESULT}" >> $GITHUB_ENV
       - name: Generate report with history
         working-directory: repo
+        env:
+          ALLURE_RESULTS_DATA_BASE_PATH: ${{github.workspace}}/data
         run: |
-          echo ${{env.NEW_ALLURE_RESULTS_PATH}}
-          mkdir -p $NEW_ALLURE_RESULTS_PATH/history
-          cp -R $EXISTING_REPORT_PATH/history/* $NEW_ALLURE_RESULTS_PATH/history
-          allure generate --clean $NEW_ALLURE_RESULTS_PATH --output $OUTPUT_PATH
+          echo ${{env.LATEST_ALLURE_RESULT}}
+          
+          
+          mkdir -p $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
+          cp -R $EXISTING_REPORT_PATH/history/* $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
+          allure generate --clean $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT --output $OUTPUT_PATH
       - name: Push changes to branch
         working-directory: repo
         env:
