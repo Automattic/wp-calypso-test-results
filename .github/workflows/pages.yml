@@ -56,7 +56,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.REPORTS_TOKEN }}
           BOT_COMMIT_MESSAGE: "regenerated report using data from ${{github.event_name}}"
         run: |
-          git config user.name $GITHUB_USER
-          git config user.email $GITHUB_EMAIL
+          git config user.name ${{env.GITHUB_USER}}
+          git config user.email ${{env.GITHUB_EMAIL}}
           git add .
           git commit -m "GitHub Actions: ${{env.BOT_COMMIT_MESSAGE}}"
