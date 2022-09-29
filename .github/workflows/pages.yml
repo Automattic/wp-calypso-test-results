@@ -45,14 +45,16 @@ jobs:
         run: |
           NEW_ALLURE_RESULTS_PATH=/some/path/$(ls -t data/*/ | head -1)
           echo $NEW_ALLURE_RESULTS_PATH
-          bash ./scripts/regenerate-report.sh
+          mkdir -p $NEW_ALLURE_RESULTS_PATH/history
+          cp -r $EXISTING_REPORT_PATH/history/* $NEW_ALLURE_RESULTS_PATH/history
+          allure generate --clean $NEW_ALLURE_RESULTS_PATH --output $OUTPUT_PATH
       - name: Push changes to branch
         working-directory: repo
         env:
           GITHUB_USER: ${{ secrets.REPORTS_USER }}
           GITHUB_EMAIL: ${{ secrets.REPORTS_EMAIL }}
           GITHUB_TOKEN: ${{ secrets.REPORTS_TOKEN }}
-          BOT_COMMIT_MESSAGE: "regenerated report using data from ${{env.NEW_ALLURE_RESULTS_PATH}}"
+          BOT_COMMIT_MESSAGE: "regenerated report using data from ${{github.event_name}}"
         run: |
           git config user.name $GITHUB_USER
           git config user.email $GITHUB_EMAIL
