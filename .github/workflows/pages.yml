@@ -8,6 +8,9 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      newest_allure_results:
+        required: true
 
 # Allow one concurrent deployment
 concurrency:
@@ -16,6 +19,7 @@ concurrency:
   
 env:
   REPORT_PATH: ${{ github.workspace }}/docs/report
+  LATEST_RESULT: ${{github.event.inputs.newest_allure_results}}
   
 jobs:
   generate_allure_report:
@@ -23,6 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ github.token }}
+      
     steps:
       - name: Install allure-commandline package
         run: npm install -g allure-commandline
@@ -44,24 +49,12 @@ jobs:
         env:
           ALLURE_RESULTS_DATA_BASE_PATH: ${{github.workspace}}/data
         run: |
-          echo "latest allure result dir" ${{env.LATEST_ALLURE_RESULT}}
-          
-          # Debugging stuff
-          echo "history dir in latest allure results dir" $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
-          
           mkdir -p $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
           
-          # Debugging stuff
-          echo "current report history path" $REPORT_PATH/history/*
-          echo "workspace"
-          ls -la ${{github.workspace}}
-          echo "workspace docs"
-          ls -la ${{github.workspace}}/docs
-          echo "workspace docs report "
-          ls -la ${{github.workspace}}/docs/report
-          
           cp -R $REPORT_PATH/history/ $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
+          
           allure generate --clean $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT --output $REPORT_PATH
+          
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
