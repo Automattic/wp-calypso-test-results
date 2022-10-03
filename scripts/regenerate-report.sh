@@ -1,16 +1,30 @@
-# Forked from woocommerce/wooocommerce-test-reports.
+# Inspired by woocommerce/wooocommerce-test-reports.
 #
 # This script combines a previous Allure report with a new one to create history trend.
 #
 # The following environment variables must be set in order to use this script:
-# - EXISTING_REPORT_PATH
-# - NEW_ALLURE_RESULTS_PATH
-# - OUTPUT_PATH
+# - ALLURE_RESULTS_DATA_BASE_PATH
+#   This is the base path for the Allure data path (eg. repo_root/data)
+# - LATEST_ALLURE_RESULT
+#   This is the latest set of results. (eg. 125/)
+# - REPORT_PATH
+#   This is the output path for the report. (eg. docs/report)
 #
 #!/usr/bin/env bash
 
-mkdir -p $NEW_ALLURE_RESULTS_PATH/history
+if [[ -d "$ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT" ]]; then
+    echo "No Allure data found under $ALLURE_RESULTS_DATA_BASE_PATH."
+    exit 1
+fi
 
-cp -r $EXISTING_REPORT_PATH/history/* $NEW_ALLURE_RESULTS_PATH/history
+if [[ -d "$REPORT_PATH" ]]; then
+    echo "Copying report history to new Allure results data..."
+    mkdir -p $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
+    cp -R $REPORT_PATH/history/ $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
+else 
+    echo "No prior report found. Creating directory..."
+    mkdir -p $REPORT_PATH
+fi
 
-allure generate --clean $NEW_ALLURE_RESULTS_PATH --output $OUTPUT_PATH
+echo "Generating report..."
+allure generate --clean $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT --output $REPORT_PATH
