@@ -45,15 +45,10 @@ jobs:
           echo "LATEST_ALLURE_RESULT=$LATEST_RESULT" >> $GITHUB_ENV
           
       - name: Generate report with history
-        working-directory: ${{github.workspace}}
+        working-directory: ${{github.workspace}}/scripts
         env:
           ALLURE_RESULTS_DATA_BASE_PATH: ${{github.workspace}}/data
-        run: |
-          mkdir -p $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
-          
-          cp -R $REPORT_PATH/history/ $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT/history
-          
-          allure generate --clean $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT --output $REPORT_PATH
+        run: bash regenerate-report.sh
           
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
