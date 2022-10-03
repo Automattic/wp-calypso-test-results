@@ -12,8 +12,8 @@
 #
 #!/usr/bin/env bash
 
-if [[ -d "$ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT" ]]; then
-    echo "No Allure data found under $ALLURE_RESULTS_DATA_BASE_PATH."
+if [[ ! -d "$ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT" ]]; then
+    echo "No Allure data found under $ALLURE_RESULTS_DATA_BASE_PATH/$LATEST_ALLURE_RESULT."
     exit 1
 fi
 
