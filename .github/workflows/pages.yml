@@ -29,31 +29,43 @@ jobs:
       GITHUB_TOKEN: ${{ github.token }}
       
     steps:
-      - name: Install allure-commandline package
-        run: npm install -g allure-commandline
-      
-      - name: Checkout this repo
-        uses: actions/checkout@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          ref: 'trunk'
-          
-      - name: Locate newest Allure results
-        working-directory: data/
-        run: |
-          echo "LATEST_ALLURE_RESULT=$(ls -F | cut -d_ -f3 | sort -n | tail -1)" >> $GITHUB_ENV
-          
-      - name: Generate report with history
-        working-directory: scripts/
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        
+      - name: Download report from S3
         env:
-          ALLURE_RESULTS_DATA_BASE_PATH: ${{github.workspace}}/data
-        run: bash regenerate-report.sh
-          
+          SOURCE: ${{ secrets.AWS_S3_BUCKET_BASE_URL }}/
+          DESTINATION: ${{ github.workspace }}
+        run: | 
+          aws s3 cp $SOURCE $DESTINATION
+          ls -la $DESTINATION
+      
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
           # Upload the generated report
           path: ${{env.REPORT_PATH}}
+          
+#       - name: Locate newest Allure results
+#         working-directory: data/
+#         run: |
+#           echo "LATEST_ALLURE_RESULT=$(ls -F | cut -d_ -f3 | sort -n | tail -1)" >> $GITHUB_ENV
+          
+#       - name: Generate report with history
+#         working-directory: scripts/
+#         env:
+#           ALLURE_RESULTS_DATA_BASE_PATH: ${{github.workspace}}/data
+#         run: bash regenerate-report.sh
+          
+#       - name: Upload artifact
+#         uses: actions/upload-pages-artifact@v1
+#         with:
+#           # Upload the generated report
+#           path: ${{env.REPORT_PATH}}
 
 #       - name: Push changes to trunk
 #         uses: EndBug/add-and-commit@v9 # You can change this to use a specific version.
