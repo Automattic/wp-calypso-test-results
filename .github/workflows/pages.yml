@@ -41,17 +41,17 @@ jobs:
         
       - name: Download report from S3
         env:
-          SOURCE: ${{ secrets.AWS_S3_BUCKET_BASE_URL }}/
+          SOURCE: ${{ secrets.AWS_S3_BUCKET_BASE_URL }}/$LATEST_RESULT
           DESTINATION: ${{ github.workspace }}
         run: | 
+          echo $LATEST_RESULT
           aws s3 cp $SOURCE $DESTINATION
-          ls -la $DESTINATION
       
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
-        with:
-          # Upload the generated report
-          path: ${{env.REPORT_PATH}}
+#       - name: Upload artifact
+#         uses: actions/upload-pages-artifact@v1
+#         with:
+#           # Upload the generated report
+#           path: ${{env.REPORT_PATH}}
           
 #       - name: Locate newest Allure results
 #         working-directory: data/
