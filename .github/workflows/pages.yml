@@ -11,6 +11,9 @@ on:
     inputs:
       newest_allure_results:
         required: true
+  repository_dispatch:
+    types:
+      - webhook
 
 # Allow one concurrent deployment
 concurrency:
