@@ -76,7 +76,10 @@ jobs:
       - name: Print contents of downloaded files
         continue-on-error: true
         run: |
-          ls ${{steps.download.outputs.path}}
+          echo "current report path"
+          ls ${{ env.CURRENT_REPORT_PATH }}
+
+          echo "recursively list"
           ls ${{ env.CURRENT_REPORT_PATH }}
         
       - name: Generate report with history
