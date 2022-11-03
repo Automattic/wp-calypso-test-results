@@ -69,6 +69,7 @@ jobs:
     
   generate_allure_report:
     name: Generate Pre-Release Allure reports
+    needs: prepare
     runs-on: ubuntu-latest
     environment:
       name: github-pages
