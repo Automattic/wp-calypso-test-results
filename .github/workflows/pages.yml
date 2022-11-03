@@ -24,11 +24,13 @@ env:
   
 jobs:
 
-  download:
+  generate:
     name: Download reports and artifacts
     runs-on: ubuntu-latest
     environment:
       name: github-pages
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
     steps:
 #       - name: Checkout this repo
 #         uses: actions/checkout@v3
@@ -36,6 +38,9 @@ jobs:
 #           path: repo
 #           token: ${{ secrets.GITHUB_TOKEN }}
 #           ref: ${{ github.ref_name }}
+
+      - name: Install allure-commandline package
+        run: npm install -g allure-commandline
           
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -64,20 +69,6 @@ jobs:
           
           mkdir -p ${{ env.CURRENT_REPORT_PATH }}
           tar xvfz ${{ env.DESTINATION }} -C ${{ env.CURRENT_REPORT_PATH }}
-    
-  # (Re)generate the report
-  generate_allure_report:
-    name: Generate Pre-Release Allure reports
-    needs: download
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-    env:
-      GITHUB_TOKEN: ${{ github.token }}
-      
-    steps:
-      - name: Install allure-commandline package
-        run: npm install -g allure-commandline
         
       - name: Generate report with history
         run: |
@@ -106,7 +97,7 @@ jobs:
   # Publish the generated report
   publish:
     name: Publish
-    needs: generate_allure_report
+    needs: generate
     runs-on: ubuntu-latest
 
     # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
