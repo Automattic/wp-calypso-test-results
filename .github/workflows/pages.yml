@@ -18,7 +18,7 @@ concurrency:
   cancel-in-progress: true
   
 env:
-  REPORT_PATH: ${{ github.workspace }}/docs/report
+  REPORT_PATH: ${{ github.workspace }}/report
   ALLURE_RESULTS_PATH: ${{ github.workspace }}/allure_results
   CURRENT_REPORT_PATH: ${{ github.workspace }}/current_allure_report
   
@@ -58,11 +58,15 @@ jobs:
           
           mkdir -p ${{ env.ALLURE_RESULTS_PATH }}
           tar xvfz ${{ env.DESTINATION }} -C ${{ env.ALLURE_RESULTS_PATH }}
+          
+          # ------
+          ls ${{ env.ALLURE_RESULTS_PATH }}
+          # ------
       
       - name: Download and untar existing Allure report from S3
         continue-on-error: true
         env:
-          SOURCE: ${{ secrets.AWS_S3_BUCKET_BASE_URL }}/current_allure_report.tgz
+          SOURCE: ${{ secrets.AWS_S3_BUCKET_BASE_URL }}/current-allure-report.tgz
           DESTINATION: ${{ github.workspace }}/current-allure-report.tgz
         run: |
           aws s3 cp $SOURCE $DESTINATION
@@ -84,6 +88,10 @@ jobs:
               mkdir -p $REPORT_PATH
           fi
 
+          # ------
+          ls ${{ env.ALLURE_RESULTS_PATH }}
+          # ------
+          
           echo "Generating report..."
           allure generate --clean $ALLURE_RESULTS_PATH --output $REPORT_PATH
           echo "Finished generating report."
