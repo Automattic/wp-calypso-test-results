@@ -72,6 +72,7 @@ jobs:
           workflow_conclusion: success
           name: github-pages
           path: ${{ env.CURRENT_REPORT_PATH }}
+          run_number: 3389489138
 
       - name: Untar existing Allure report
         if: success()
