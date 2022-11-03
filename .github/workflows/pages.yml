@@ -1,11 +1,6 @@
-# Sample workflow for building and deploying a Jekyll site to GitHub Pages
 name: Generate updated Allure report
 
 on:
-  # Runs on pushes targeting the default branch
-#   push:
-#     branches: ["trunk"]
-
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
@@ -28,6 +23,8 @@ env:
   CURRENT_REPORT_PATH: ${{ github.workspace }}/current_allure_report
   
 jobs:
+
+  # Prepare the environment
   prepare:
     name: Prepare environment
     runs-on: ubuntu-latest
@@ -69,6 +66,7 @@ jobs:
           mkdir -p ${{ env.CURRENT_REPORT_PATH }}
           tar xvfz ${{ env.DESTINATION }} -C ${{ env.CURRENT_REPORT_PATH }}
     
+  # Regenerate the report
   generate_allure_report:
     name: Generate Pre-Release Allure reports
     needs: prepare
@@ -88,25 +86,8 @@ jobs:
         with:
           # Upload the generated report
           path: ${{env.REPORT_PATH}}
-          
-#       - name: Locate newest Allure results
-#         working-directory: data/
-#         run: |
-#           echo "LATEST_ALLURE_RESULT=$(ls -F | cut -d_ -f3 | sort -n | tail -1)" >> $GITHUB_ENV
-          
-#       - name: Generate report with history
-#         working-directory: scripts/
-#         env:
 
-#       - name: Push changes to trunk
-#         uses: EndBug/add-and-commit@v9 # You can change this to use a specific version.
-#         env:
-#           BOT_COMMIT_MESSAGE: "regenerated report using data from run ${{env.LATEST_ALLURE_RESULT}}"
-#         with:
-#           add: 'docs/report'
-#           push: true
-#           message: ${{env.BOT_COMMIT_MESSAGE}}'
-
+  # Publish the generated report
   publish:
     name: Publish
     needs: generate_allure_report
