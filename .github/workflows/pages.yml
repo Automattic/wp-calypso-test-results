@@ -73,14 +73,10 @@ jobs:
           name: github-pages
           path: ${{ env.CURRENT_REPORT_PATH }}
 
-      # - name: Untar existing Allure report
-      #   if: success()
-      #   continue-on-error: true
-      #   env:
-      #     DESTINATION: ${{ github.workspace }}/current-report.tgz
-      #   run: |
-      #     mkdir -p ${{ env.CURRENT_REPORT_PATH }}
-      #     tar xvfz ${{ env.DESTINATION }} -C ${{ env.CURRENT_REPORT_PATH }}
+      - name: Untar existing Allure report
+        if: success()
+        # Flatten directory by one, so the `artifacts.tar` directory is removed.
+        run: tar xvfz ${{ env.CURRENT_REPORT_PATH }} --strip-components=1
         
       - name: Generate report with history
         run: |
