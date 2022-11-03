@@ -46,6 +46,7 @@ jobs:
         env:
           SOURCE: ${{ secrets.AWS_S3_BUCKET_BASE_URL }}/${{ github.event.inputs.allure_result_filename }}
           DESTINATION: ${{ github.workspace }}/allure-results.tgz
+        working-directory: ${{ github.workspace }}
         run: |
           aws s3 cp $SOURCE $DESTINATION
           
@@ -54,6 +55,7 @@ jobs:
       
       - name: Download and untar existing Allure report from S3
         continue-on-error: true
+        working-directory: ${{ github.workspace }}
         env:
           SOURCE: ${{ secrets.AWS_S3_BUCKET_BASE_URL }}/current-allure-report.tgz
           DESTINATION: ${{ github.workspace }}/current-allure-report.tgz
@@ -82,21 +84,15 @@ jobs:
       #     ls -la ${{ env.CURRENT_REPORT_PATH }}
         
       - name: Generate report with history
+        working-directory: ${{ github.workspace }}
         run: |
           if [[ -d "$CURRENT_REPORT_PATH" ]]; then
               echo "Copying report history to new Allure results data..."
               # Make the "history" directory in the newest Allure results directory.
               mkdir -p $ALLURE_RESULTS_PATH/history
 
-              ls $ALLURE_RESULTS
-
               # Copy over contents of the "history" directory from the existing report.
               cp -R $CURRENT_REPORT_PATH/history/ $ALLURE_RESULTS_PATH/history/
-
-              echo "current report path history"
-              ls $CURRENT_REPORT_PATH/history
-              echo "allure results path history"
-              ls $ALLURE_RESULTS_PATH/history/
           else 
               echo "No prior report found. Creating directory..."
               # Fresh run. Allure will generate report without considering history.
@@ -104,7 +100,7 @@ jobs:
           fi
           
           echo "Generating report..."
-          allure generate --clean $ALLURE_RESULTS_PATH --output $REPORT_PATH
+          allure generate $ALLURE_RESULTS_PATH --output $REPORT_PATH
           echo "Finished generating report."
 
       - name: Upload artifact
