@@ -31,12 +31,12 @@ jobs:
     environment:
       name: github-pages
     steps:
-      - name: Checkout this repo
-        uses: actions/checkout@v3
-        with:
-          path: repo
-          token: ${{ secrets.GITHUB_TOKEN }}
-          ref: ${{ github.ref_name }}
+#       - name: Checkout this repo
+#         uses: actions/checkout@v3
+#         with:
+#           path: repo
+#           token: ${{ secrets.GITHUB_TOKEN }}
+#           ref: ${{ github.ref_name }}
           
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -79,7 +79,23 @@ jobs:
     steps:
       - name: Generate report with history
         working-directory: $${{ github.workspace}}/repo/scripts
-        run: bash regenerate-report.sh
+        run: |
+          if [[ -d "$CURRENT_REPORT_PATH" ]]; then
+              echo "Copying report history to new Allure results data..."
+              # Make the "history" directory in the newest Allure results directory.
+              mkdir -p $ALLURE_RESULTS_PATH/history
+              # Copy over contents of the "history" directory from the existing report.
+              cp -R $CURRENT_REPORT_PATH/history/ $ALLURE_RESULTS_PATH/history
+          else 
+              echo "No prior report found. Creating directory..."
+              # Fresh run. Allure will generate report without considering history.
+              mkdir -p $REPORT_PATH
+          fi
+
+          echo "Generating report..."
+          allure generate --clean $ALLURE_RESULTS_PATH --output $REPORT_PATH
+          echo "Finished generating report."
+
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
