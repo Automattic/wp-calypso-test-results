@@ -24,9 +24,8 @@ env:
   
 jobs:
 
-  # Prepare the environment
-  prepare:
-    name: Prepare environment
+  download:
+    name: Download reports and artifacts
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -37,9 +36,6 @@ jobs:
 #           path: repo
 #           token: ${{ secrets.GITHUB_TOKEN }}
 #           ref: ${{ github.ref_name }}
-
-      - name: Install allure-commandline package
-        run: npm install -g allure-commandline
           
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -69,10 +65,10 @@ jobs:
           mkdir -p ${{ env.CURRENT_REPORT_PATH }}
           tar xvfz ${{ env.DESTINATION }} -C ${{ env.CURRENT_REPORT_PATH }}
     
-  # Regenerate the report
+  # (Re)generate the report
   generate_allure_report:
     name: Generate Pre-Release Allure reports
-    needs: prepare
+    needs: download
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -80,6 +76,9 @@ jobs:
       GITHUB_TOKEN: ${{ github.token }}
       
     steps:
+      - name: Install allure-commandline package
+        run: npm install -g allure-commandline
+        
       - name: Generate report with history
         run: |
           if [[ -d "$CURRENT_REPORT_PATH" ]]; then
