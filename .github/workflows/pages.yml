@@ -67,22 +67,20 @@ jobs:
         id: download-artifact
         continue-on-error: true
         uses: dawidd6/action-download-artifact@v2
-        env:
-          DESTINATION: ${{ github.workspace }}/current-allure-report.tgz
         with:
           workflow: pages.yml
           workflow_conclusion: success
           name: github-pages
-          path: ${{ github.workspace }}/current-allure-report.tgz
+          path: ${{ env.CURRENT_REPORT_PATH }}
 
-      - name: Untar existing Allure report
-        if: success()
-        continue-on-error: true
-        env:
-          DESTINATION: ${{ github.workspace }}/current-allure-report.tgz
-        run: |
-          mkdir -p ${{ env.CURRENT_REPORT_PATH }}
-          tar xvfz ${{ env.DESTINATION }} -C ${{ env.CURRENT_REPORT_PATH }}
+      # - name: Untar existing Allure report
+      #   if: success()
+      #   continue-on-error: true
+      #   env:
+      #     DESTINATION: ${{ github.workspace }}/current-report.tgz
+      #   run: |
+      #     mkdir -p ${{ env.CURRENT_REPORT_PATH }}
+      #     tar xvfz ${{ env.DESTINATION }} -C ${{ env.CURRENT_REPORT_PATH }}
         
       - name: Generate report with history
         run: |
