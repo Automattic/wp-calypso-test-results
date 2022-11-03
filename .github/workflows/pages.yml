@@ -87,8 +87,16 @@ jobs:
               echo "Copying report history to new Allure results data..."
               # Make the "history" directory in the newest Allure results directory.
               mkdir -p $ALLURE_RESULTS_PATH/history
+
+              ls $ALLURE_RESULTS
+
               # Copy over contents of the "history" directory from the existing report.
               cp -R $CURRENT_REPORT_PATH/history/ $ALLURE_RESULTS_PATH/history/
+
+              echo "current report path history"
+              ls $CURRENT_REPORT_PATH/history
+              echo "allure results path history"
+              ls $ALLURE_RESULTS_PATH/history/
           else 
               echo "No prior report found. Creating directory..."
               # Fresh run. Allure will generate report without considering history.
