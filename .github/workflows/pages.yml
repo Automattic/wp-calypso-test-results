@@ -20,7 +20,7 @@ concurrency:
 env:
   REPORT_PATH: ${{ github.workspace }}/report
   ALLURE_RESULTS_PATH: ${{ github.workspace }}/allure_results
-  CURRENT_REPORT_PATH: ${{ github.workspace }}/current_allure_report
+  HISTORY_PATH: ${{ github.workspace }}/history
   
 jobs:
 
@@ -53,68 +53,51 @@ jobs:
           mkdir -p ${{ env.ALLURE_RESULTS_PATH }}
           tar xvfz ${{ env.DESTINATION }} -C ${{ env.ALLURE_RESULTS_PATH }}
       
-      - name: Download and untar existing Allure report from S3
+      - name: Download and untar existing Allure history from S3
         continue-on-error: true
         working-directory: ${{ github.workspace }}
         env:
-          SOURCE: ${{ secrets.AWS_S3_BUCKET_BASE_URL }}/current-allure-report.tgz
-          DESTINATION: ${{ github.workspace }}/current-allure-report.tgz
+          SOURCE: ${{ secrets.AWS_S3_BUCKET_BASE_URL }}/history.tgz
+          DESTINATION: ${{ github.workspace }}/history.tgz
         run: |
           aws s3 cp $SOURCE $DESTINATION
           
-          mkdir -p ${{ env.CURRENT_REPORT_PATH }}
-          tar xvfz ${{ env.DESTINATION }} -C ${{ env.CURRENT_REPORT_PATH }}
-
-      # - name: Download previous artifact
-      #   id: download-artifact
-      #   continue-on-error: true
-      #   uses: dawidd6/action-download-artifact@v2
-      #   with:
-      #     workflow: pages.yml
-      #     workflow_conclusion: success
-      #     name: github-pages
-      #     path: ${{ env.CURRENT_REPORT_PATH }}
-      #     run_number: 3389489138
-
-      # - name: Untar existing Allure report
-      #   if: success()
-      #   # Flatten directory by one, so the `artifacts.tar` directory is removed.
-      #   run: |
-      #     tar xvf ${{ env.CURRENT_REPORT_PATH }}/artifact.tar --strip-components=1 -C ${{ env.CURRENT_REPORT_PATH }}
-      #     ls -la ${{ env.CURRENT_REPORT_PATH }}
+          mkdir -p ${{ env.HISTORY_PATH }}
+          tar xvfz ${{ env.DESTINATION }} -C ${{ env.HISTORY_PATH }}
         
       - name: Generate report with history
         working-directory: ${{ github.workspace }}
         run: |
-          if [[ -d "$CURRENT_REPORT_PATH" ]]; then
+          if [[ -d "${{ env.HISTORY_PATH }}" ]]; then
               echo "Copying report history to new Allure results data..."
               # Make the "history" directory in the newest Allure results directory.
-              mkdir -p $ALLURE_RESULTS_PATH/history
+              mkdir -p ${{ env.ALLURE_RESULTS_PATH }}/history
 
               # Copy over contents of the "history" directory from the existing report.
-              cp -R $CURRENT_REPORT_PATH/history/* $ALLURE_RESULTS_PATH/history
+              cp -R ${{ env.HISTORY_PATH }}/* ${{ env.ALLURE_RESULTS_PATH }}/history
           else 
-              echo "No prior report found. Creating directory..."
-              # Fresh run. Allure will generate report without considering history.
-              mkdir -p $REPORT_PATH
+              # Fresh run. Allure will generate a fresh report.
+              echo "No prior report found."
           fi
-          
+
+          mkdir -p ${{ env.REPORT_PATH }}
+
           echo "Generating report..."
-          allure generate --clean $ALLURE_RESULTS_PATH --output $REPORT_PATH
+          allure generate --clean ${{ env.ALLURE_RESULTS_PATH }} --output ${{ env.REPORT_PATH }}
           echo "Finished generating report."
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
           # Upload the generated report
-          path: ${{env.REPORT_PATH}}
+          path: ${{ env.REPORT_PATH }}
         
-      - name: Upload artifact to S3
+      - name: Upload Allure history to S3
         env:
-          SOURCE: ${{ github.workspace }}/current-allure-report.tgz
-          DESTINATION: ${{ secrets.AWS_S3_BUCKET_BASE_URL }}/current-allure-report.tgz
+          SOURCE: ${{ github.workspace }}/history.tgz
+          DESTINATION: ${{ secrets.AWS_S3_BUCKET_BASE_URL }}/history.tgz
         run: |
-          tar cvfz ${{ env.SOURCE }} -C ${{ env.REPORT_PATH }} .
+          tar cvfz ${{ env.SOURCE }} -C ${{ env.REPORT_PATH }}/history .
 
           aws s3 cp $SOURCE $DESTINATION
 
