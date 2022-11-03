@@ -77,7 +77,7 @@ jobs:
         if: success()
         # Flatten directory by one, so the `artifacts.tar` directory is removed.
         run: |
-          tar xvf ${{ env.CURRENT_REPORT_PATH }}/artifact.tar --strip-components=1
+          tar xvf ${{ env.CURRENT_REPORT_PATH }}/artifact.tar --strip-components=1 -C ${{ env.CURRENT_REPORT_PATH }}
           ls -la ${{ env.CURRENT_REPORT_PATH }}
         
       - name: Generate report with history
