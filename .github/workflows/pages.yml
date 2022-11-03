@@ -76,7 +76,7 @@ jobs:
       - name: Untar existing Allure report
         if: success()
         # Flatten directory by one, so the `artifacts.tar` directory is removed.
-        run: tar xvfz ${{ env.CURRENT_REPORT_PATH }}/artifact.tar --strip-components=1
+        run: tar xvf ${{ env.CURRENT_REPORT_PATH }}/artifact.tar --strip-components=1
         
       - name: Generate report with history
         run: |
