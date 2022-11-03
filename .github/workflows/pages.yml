@@ -78,7 +78,7 @@ jobs:
       
     steps:
       - name: Generate report with history
-        working-directory: $${{ github.workspace}}/scripts
+        working-directory: $${{ github.workspace}}/repo/scripts
         run: bash regenerate-report.sh
       
       - name: Upload artifact
