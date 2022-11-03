@@ -49,10 +49,10 @@ jobs:
         run: |
           aws s3 cp $SOURCE $DESTINATION
           
-          mkdir ${{ env.ALLURE_RESULTS_PATH }}
+          mkdir -p ${{ env.ALLURE_RESULTS_PATH }}
           tar xvfz $DESITNATION -C ${{ env.ALLURE_RESULTS_PATH }}
       
-      - name: Download existing Allure report from S3
+      - name: Download and untar existing Allure report from S3
         continue-on-error: true
         env:
           SOURCE: ${{ secrets.AWS_S3_BUCKET_BASE_URL }}/current_allure_report.tgz
@@ -60,7 +60,7 @@ jobs:
         run: |
           aws s3 cp $SOURCE $DESTINATION
           
-          mkdir ${{ env.CURRENT_REPORT_PATH }}
+          mkdir -p ${{ env.CURRENT_REPORT_PATH }}
           tar xvfz $DESTINATION -C ${{ env.CURRENT_REPORT_PATH }}
           
       - name: Generate report with history
