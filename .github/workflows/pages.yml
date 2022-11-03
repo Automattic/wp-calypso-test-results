@@ -9,7 +9,7 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
-      newest_allure_results:
+      allure_result_filename:
         required: true
   repository_dispatch:
     types:
@@ -22,7 +22,8 @@ concurrency:
   
 env:
   REPORT_PATH: ${{ github.workspace }}/docs/report
-  LATEST_RESULT: ${{github.event.inputs.newest_allure_results}}
+  ALLURE_RESULTS_PATH: ${{ github.workspace }}/allure_results
+  CURRENT_REPORT_PATH: ${{ github.workspace }}/current_allure_report
   
 jobs:
   generate_allure_report:
@@ -39,19 +40,35 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         
-      - name: Download report from S3
+      - name: Download and untar Allure artifact from S3
         env:
-          SOURCE: ${{ secrets.AWS_S3_BUCKET_BASE_URL }}/$LATEST_RESULT
-          DESTINATION: ${{ github.workspace }}
-        run: | 
-          echo $LATEST_RESULT
+          SOURCE: ${{ secrets.AWS_S3_BUCKET_BASE_URL }}/${{ github.event.inputs.allure_result_filename }}
+          DESTINATION: ${{ github.workspace }}/allure-results.tgz
+        run: |
           aws s3 cp $SOURCE $DESTINATION
+          
+          mkdir ${{ env.ALLURE_RESULTS_PATH }}
+          tar xvfz $DESITNATION -C ${{ env.ALLURE_RESULTS_PATH }}
       
-#       - name: Upload artifact
-#         uses: actions/upload-pages-artifact@v1
-#         with:
-#           # Upload the generated report
-#           path: ${{env.REPORT_PATH}}
+      - name: Download existing Allure report from S3
+        continue-on-error: true
+        env:
+          SOURCE: ${{ secrets.AWS_S3_BUCKET_BASE_URL }}/current_allure_report.tgz
+          DESTINATION: ${{ github.workspace }}/current-allure-report.tgz
+        run: |
+          aws s3 cp $SOURCE $DESTINATION
+          
+          mkdir ${{ env.CURRENT_REPORT_PATH }}
+          tar xvfz $DESTINATION -C ${{ env.CURRENT_REPORT_PATH }}
+          
+      - name: Generate report with history
+        run: bash regenerate-report.sh
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          # Upload the generated report
+          path: ${{env.REPORT_PATH}}
           
 #       - name: Locate newest Allure results
 #         working-directory: data/
@@ -61,14 +78,6 @@ jobs:
 #       - name: Generate report with history
 #         working-directory: scripts/
 #         env:
-#           ALLURE_RESULTS_DATA_BASE_PATH: ${{github.workspace}}/data
-#         run: bash regenerate-report.sh
-          
-#       - name: Upload artifact
-#         uses: actions/upload-pages-artifact@v1
-#         with:
-#           # Upload the generated report
-#           path: ${{env.REPORT_PATH}}
 
 #       - name: Push changes to trunk
 #         uses: EndBug/add-and-commit@v9 # You can change this to use a specific version.
