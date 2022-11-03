@@ -63,13 +63,16 @@ jobs:
 #           mkdir -p ${{ env.CURRENT_REPORT_PATH }}
 #           tar xvfz ${{ env.DESTINATION }} -C ${{ env.CURRENT_REPORT_PATH }}
 
-      - uses: actions/download-artifact@v3
+      - name: Download previous artifact
+        id: download-artifact
         continue-on-error: true
-        id: download-current-report
+        uses: dawidd6/action-download-artifact@v2
         with:
+          workflow: pages.yml
+          workflow_conclusion: success
           name: github-pages
           path: ${{ env.CURRENT_REPORT_PATH }}
-          
+
       - name: Print contents of downloaded files
         continue-on-error: true
         run: ls ${{steps.download.outputs.download-path}}
