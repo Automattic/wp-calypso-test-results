@@ -52,34 +52,34 @@ jobs:
           mkdir -p ${{ env.ALLURE_RESULTS_PATH }}
           tar xvfz ${{ env.DESTINATION }} -C ${{ env.ALLURE_RESULTS_PATH }}
       
-#       - name: Download and untar existing Allure report from S3
-#         continue-on-error: true
-#         env:
-#           SOURCE: ${{ secrets.AWS_S3_BUCKET_BASE_URL }}/current-allure-report.tgz
-#           DESTINATION: ${{ github.workspace }}/current-allure-report.tgz
-#         run: |
-#           aws s3 cp $SOURCE $DESTINATION
-          
-#           mkdir -p ${{ env.CURRENT_REPORT_PATH }}
-#           tar xvfz ${{ env.DESTINATION }} -C ${{ env.CURRENT_REPORT_PATH }}
-
-      - name: Download previous artifact
-        id: download-artifact
+      - name: Download and untar existing Allure report from S3
         continue-on-error: true
-        uses: dawidd6/action-download-artifact@v2
-        with:
-          workflow: pages.yml
-          workflow_conclusion: success
-          name: github-pages
-          path: ${{ env.CURRENT_REPORT_PATH }}
-          run_number: 3389489138
-
-      - name: Untar existing Allure report
-        if: success()
-        # Flatten directory by one, so the `artifacts.tar` directory is removed.
+        env:
+          SOURCE: ${{ secrets.AWS_S3_BUCKET_BASE_URL }}/current-allure-report.tgz
+          DESTINATION: ${{ github.workspace }}/current-allure-report.tgz
         run: |
-          tar xvf ${{ env.CURRENT_REPORT_PATH }}/artifact.tar --strip-components=1 -C ${{ env.CURRENT_REPORT_PATH }}
-          ls -la ${{ env.CURRENT_REPORT_PATH }}
+          aws s3 cp $SOURCE $DESTINATION
+          
+          mkdir -p ${{ env.CURRENT_REPORT_PATH }}
+          tar xvfz ${{ env.DESTINATION }} -C ${{ env.CURRENT_REPORT_PATH }}
+
+      # - name: Download previous artifact
+      #   id: download-artifact
+      #   continue-on-error: true
+      #   uses: dawidd6/action-download-artifact@v2
+      #   with:
+      #     workflow: pages.yml
+      #     workflow_conclusion: success
+      #     name: github-pages
+      #     path: ${{ env.CURRENT_REPORT_PATH }}
+      #     run_number: 3389489138
+
+      # - name: Untar existing Allure report
+      #   if: success()
+      #   # Flatten directory by one, so the `artifacts.tar` directory is removed.
+      #   run: |
+      #     tar xvf ${{ env.CURRENT_REPORT_PATH }}/artifact.tar --strip-components=1 -C ${{ env.CURRENT_REPORT_PATH }}
+      #     ls -la ${{ env.CURRENT_REPORT_PATH }}
         
       - name: Generate report with history
         run: |
@@ -104,6 +104,15 @@ jobs:
         with:
           # Upload the generated report
           path: ${{env.REPORT_PATH}}
+        
+      - name: Upload artifact to S3
+        env:
+          SOURCE: ${{ github.workspace }}/current-allure-report.tgz
+          DESTINATION: ${{ secrets.AWS_S3_BUCKET_BASE_URL }}/current-allure-report.tgz
+        run: |
+          tar cvfz ${{ env.SOURCE }} -C ${{ env.REPORT_PATH }} .
+
+          aws s3 cp $SOURCE $DESTINATION
 
   # Publish the generated report
   publish:
