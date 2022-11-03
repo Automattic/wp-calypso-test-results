@@ -64,7 +64,7 @@ jobs:
           tar xvfz ${{ env.DESTINATION }} -C ${{ env.CURRENT_REPORT_PATH }}
           
       - name: Generate report with history
-        working-directory: scripts/
+        working-directory: $${{ github.workspace}}/scripts
         run: bash regenerate-report.sh
       
       - name: Upload artifact
