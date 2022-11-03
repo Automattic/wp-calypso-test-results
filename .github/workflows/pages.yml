@@ -3,19 +3,21 @@ name: Generate updated Allure report
 
 on:
   # Runs on pushes targeting the default branch
-  push:
-    branches: ["trunk"]
+#   push:
+#     branches: ["trunk"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
       allure_result_filename:
         required: true
+        
+  # Runs on webhook calls
   repository_dispatch:
     types:
       - webhook
 
-# Allow one concurrent deployment
+# Allow one concurrent run/deployment
 concurrency:
   group: "pages"
   cancel-in-progress: true
