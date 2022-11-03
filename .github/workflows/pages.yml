@@ -32,13 +32,6 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ github.token }}
     steps:
-#       - name: Checkout this repo
-#         uses: actions/checkout@v3
-#         with:
-#           path: repo
-#           token: ${{ secrets.GITHUB_TOKEN }}
-#           ref: ${{ github.ref_name }}
-
       - name: Install allure-commandline package
         run: npm install -g allure-commandline
           
@@ -58,21 +51,28 @@ jobs:
           
           mkdir -p ${{ env.ALLURE_RESULTS_PATH }}
           tar xvfz ${{ env.DESTINATION }} -C ${{ env.ALLURE_RESULTS_PATH }}
-          
-          # ------
-          ls ${{ env.ALLURE_RESULTS_PATH }}
-          # ------
       
-      - name: Download and untar existing Allure report from S3
-        continue-on-error: true
-        env:
-          SOURCE: ${{ secrets.AWS_S3_BUCKET_BASE_URL }}/current-allure-report.tgz
-          DESTINATION: ${{ github.workspace }}/current-allure-report.tgz
-        run: |
-          aws s3 cp $SOURCE $DESTINATION
+#       - name: Download and untar existing Allure report from S3
+#         continue-on-error: true
+#         env:
+#           SOURCE: ${{ secrets.AWS_S3_BUCKET_BASE_URL }}/current-allure-report.tgz
+#           DESTINATION: ${{ github.workspace }}/current-allure-report.tgz
+#         run: |
+#           aws s3 cp $SOURCE $DESTINATION
           
-          mkdir -p ${{ env.CURRENT_REPORT_PATH }}
-          tar xvfz ${{ env.DESTINATION }} -C ${{ env.CURRENT_REPORT_PATH }}
+#           mkdir -p ${{ env.CURRENT_REPORT_PATH }}
+#           tar xvfz ${{ env.DESTINATION }} -C ${{ env.CURRENT_REPORT_PATH }}
+
+      - uses: actions/download-artifact@v3
+        continue-on-error: true
+        id: download-current-report
+        with:
+          name: github-pages
+          path: ${{ env.CURRENT_REPORT_PATH }}
+          
+      - name: Print contents of downloaded files
+        continue-on-error: true
+        run: ls ${{steps.download.outputs.download-path}}
         
       - name: Generate report with history
         run: |
@@ -87,10 +87,6 @@ jobs:
               # Fresh run. Allure will generate report without considering history.
               mkdir -p $REPORT_PATH
           fi
-
-          # ------
-          ls ${{ env.ALLURE_RESULTS_PATH }}
-          # ------
           
           echo "Generating report..."
           allure generate --clean $ALLURE_RESULTS_PATH --output $REPORT_PATH
