@@ -75,7 +75,9 @@ jobs:
 
       - name: Print contents of downloaded files
         continue-on-error: true
-        run: ls ${{steps.download.outputs.download-path}}
+        run: |
+          ls ${{steps.download.outputs.path}}
+          ls ${{ env.CURRENT_REPORT_PATH }}
         
       - name: Generate report with history
         run: |
