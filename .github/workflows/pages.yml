@@ -37,6 +37,9 @@ jobs:
 #           path: repo
 #           token: ${{ secrets.GITHUB_TOKEN }}
 #           ref: ${{ github.ref_name }}
+
+      - name: Install allure-commandline package
+        run: npm install -g allure-commandline
           
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -78,13 +81,12 @@ jobs:
       
     steps:
       - name: Generate report with history
-        working-directory: $${{ github.workspace}}/repo/scripts
         run: |
           if [[ -d "$CURRENT_REPORT_PATH" ]]; then
               echo "Copying report history to new Allure results data..."
               # Make the "history" directory in the newest Allure results directory.
               mkdir -p $ALLURE_RESULTS_PATH/history
-              # Copy over contents of the "history" directory from the existing report.
+              # Copy over contents of the "hinstory" directory from the existing report.
               cp -R $CURRENT_REPORT_PATH/history/ $ALLURE_RESULTS_PATH/history
           else 
               echo "No prior report found. Creating directory..."
@@ -96,7 +98,6 @@ jobs:
           allure generate --clean $ALLURE_RESULTS_PATH --output $REPORT_PATH
           echo "Finished generating report."
 
-      
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
