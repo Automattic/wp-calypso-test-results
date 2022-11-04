@@ -1,9 +1,10 @@
-name: Generate updated Allure report
+name: Generate Allure report
 
 on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
+      # Filename of the archive containing latest Allure results to be processed.
       allure_result_filename:
         required: true
         
@@ -12,7 +13,7 @@ on:
     types:
       - webhook
 
-# Allow one concurrent run/deployment
+# Allow only one concurrent run/deployment
 concurrency:
   group: "pages"
   cancel-in-progress: true
@@ -23,14 +24,15 @@ env:
   HISTORY_PATH: ${{ github.workspace }}/history
   
 jobs:
-
+  # (Re)generate the Allure report.
   generate:
-    name: Download reports and artifacts
+    name: Generate updated Allure report
     runs-on: ubuntu-latest
     environment:
       name: github-pages
     env:
       GITHUB_TOKEN: ${{ github.token }}
+
     steps:
       - name: Install allure-commandline package
         run: npm install -g allure-commandline
@@ -54,6 +56,7 @@ jobs:
           tar xvfz ${{ env.DESTINATION }} -C ${{ env.ALLURE_RESULTS_PATH }}
       
       - name: Download and untar existing Allure history from S3
+        # If this is the first run, there will not be existing history.
         continue-on-error: true
         working-directory: ${{ github.workspace }}
         env:
@@ -65,7 +68,7 @@ jobs:
           mkdir -p ${{ env.HISTORY_PATH }}
           tar xvfz ${{ env.DESTINATION }} -C ${{ env.HISTORY_PATH }}
         
-      - name: Generate report with history
+      - name: Generate report
         working-directory: ${{ github.workspace }}
         run: |
           if [[ -d "${{ env.HISTORY_PATH }}" ]]; then
@@ -92,7 +95,7 @@ jobs:
           # Upload the generated report
           path: ${{ env.REPORT_PATH }}
         
-      - name: Upload Allure history to S3
+      - name: Upload new Allure history to S3
         env:
           SOURCE: ${{ github.workspace }}/history.tgz
           DESTINATION: ${{ secrets.AWS_S3_BUCKET_BASE_URL }}/history.tgz
