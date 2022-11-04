@@ -22,6 +22,7 @@ env:
   REPORT_PATH: ${{ github.workspace }}/report
   ALLURE_RESULTS_PATH: ${{ github.workspace }}/allure_results
   HISTORY_PATH: ${{ github.workspace }}/history
+  REPO_PATH: ${{ github.workspace }}/repo
   
 jobs:
   # (Re)generate the Allure report.
@@ -34,6 +35,9 @@ jobs:
       GITHUB_TOKEN: ${{ github.token }}
 
     steps:
+      #################
+      # Setup
+      #################
       - name: Install allure-commandline package
         run: npm install -g allure-commandline
           
@@ -43,6 +47,12 @@ jobs:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Checkout this repo
+        uses: actions/checkout@v3
+        with:
+          path: ${{ env.REPO_PATH }}
+          ref: 'trunk'
         
       - name: Download and untar Allure artifact from S3
         env:
@@ -70,7 +80,7 @@ jobs:
         
       - name: Generate report
         working-directory: ${{ github.workspace }}
-        run: bash script/regenerate-report.sh
+        run: bash ${{ env.REPO_PATH }}/scripts/regenerate-report.sh
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
