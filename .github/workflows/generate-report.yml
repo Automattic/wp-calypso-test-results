@@ -70,24 +70,7 @@ jobs:
         
       - name: Generate report
         working-directory: ${{ github.workspace }}
-        run: |
-          if [[ -d "${{ env.HISTORY_PATH }}" ]]; then
-              echo "Copying report history to new Allure results data..."
-              # Make the "history" directory in the newest Allure results directory.
-              mkdir -p ${{ env.ALLURE_RESULTS_PATH }}/history
-
-              # Copy over contents of the "history" directory from the existing report.
-              cp -R ${{ env.HISTORY_PATH }}/* ${{ env.ALLURE_RESULTS_PATH }}/history
-          else 
-              # Fresh run. Allure will generate a fresh report.
-              echo "No prior report found."
-          fi
-
-          mkdir -p ${{ env.REPORT_PATH }}
-
-          echo "Generating report..."
-          allure generate --clean ${{ env.ALLURE_RESULTS_PATH }} --output ${{ env.REPORT_PATH }}
-          echo "Finished generating report."
+        run: bash script/regenerate-report.sh
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
