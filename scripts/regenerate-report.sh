@@ -4,26 +4,29 @@
 #
 # The following environment variables must be set in order to use this script:
 # - ALLURE_RESULTS_PATH
-#   This is the base path for the Allure data path (eg. repo_root/allure_results)
-# - CURRENT_REPORT_PATH
-#   This is the path for the existing report, if any. (eg. repo_root/current_allure_report)
+#   Path which holds the Allure results (eg. repo_root/allure_results)
+# - HISTORY_PATH
+#   Path which holds the history trend. (eg. repo_root/history)
 # - REPORT_PATH
-#   This is the output path for the new report. (eg. docs/report)
+#   Path to which the new report will be written to. (eg. docs/report)
 #
 #!/usr/bin/env bash
 
-if [[ -d "$CURRENT_REPORT_PATH" ]]; then
+if [[ -d "${{ env.HISTORY_PATH }}" ]]; then
     echo "Copying report history to new Allure results data..."
     # Make the "history" directory in the newest Allure results directory.
-    mkdir -p $ALLURE_RESULTS_PATH/history
+    mkdir -p ${{ env.ALLURE_RESULTS_PATH }}/history
+
     # Copy over contents of the "history" directory from the existing report.
-    cp -R $CURRENT_REPORT_PATH/history/ $ALLURE_RESULTS_PATH/history
+    # The trailing /* is important; without it, the directory is copied instead of the JSON files.
+    cp -R ${{ env.HISTORY_PATH }}/* ${{ env.ALLURE_RESULTS_PATH }}/history
 else 
-    echo "No prior report found. Creating directory..."
-    # Fresh run. Allure will generate report without considering history.
-    mkdir -p $REPORT_PATH
+    # Fresh run. Allure will generate a fresh report.
+    echo "No prior report found."
 fi
 
+mkdir -p ${{ env.REPORT_PATH }}
+
 echo "Generating report..."
-allure generate --clean $ALLURE_RESULTS_PATH --output $REPORT_PATH
+allure generate --clean ${{ env.ALLURE_RESULTS_PATH }} --output ${{ env.REPORT_PATH }}
 echo "Finished generating report."
