@@ -12,21 +12,21 @@
 #
 #!/usr/bin/env bash
 
-if [[ -d "${{ env.HISTORY_PATH }}" ]]; then
+if [[ -d "$HISTORY_PATH" ]]; then
     echo "Copying report history to new Allure results data..."
     # Make the "history" directory in the newest Allure results directory.
-    mkdir -p ${{ env.ALLURE_RESULTS_PATH }}/history
+    mkdir -p $ALLURE_RESULTS_PATH/history
 
     # Copy over contents of the "history" directory from the existing report.
     # The trailing /* is important; without it, the directory is copied instead of the JSON files.
-    cp -R ${{ env.HISTORY_PATH }}/* ${{ env.ALLURE_RESULTS_PATH }}/history
+    cp -R $HISTORY_PATH/* $ALLURE_RESULTS_PATH/history
 else 
     # Fresh run. Allure will generate a fresh report.
     echo "No prior report found."
 fi
 
-mkdir -p ${{ env.REPORT_PATH }}
+mkdir -p $REPORT_PATH
 
 echo "Generating report..."
-allure generate --clean ${{ env.ALLURE_RESULTS_PATH }} --output ${{ env.REPORT_PATH }}
+allure generate --clean $ALLURE_RESULTS_PATH --output $REPORT_PATH
 echo "Finished generating report."
