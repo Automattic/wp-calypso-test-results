@@ -11,11 +11,15 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
 
-      - name: Get Last Comment
-        id: last_comment
-        run: |
-          last_comment=$(echo "${{ github.event.issue.issue.issue_number }}" | tail -n 1)
-          echo "::set-output name=last_comment::$last_comment"
+      - uses: octokit/request-action@v2.x
+        id: get_latest_release
+        with:
+          route: GET /repos/{Automattic}/{wp-calypso-results}/issues/${{ github.events.issue.number }}/comments
+          owner: automattic
+          repo: request-action
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: "echo latest release: '${{ steps.get_latest_release.outputs.data }}'"
           
       # - name: add label
       #   uses: actions-ecosystem/action-add-labels@v1
