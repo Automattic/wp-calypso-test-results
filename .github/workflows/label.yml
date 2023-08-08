@@ -2,7 +2,7 @@ name: Add Label
 
 on:
   issues:
-    types: [opened, closed]
+    types: [closed]
     
 jobs:
   add_label:
@@ -11,8 +11,14 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
 
+      - name: Get Last Comment
+        id: last_comment
+        run: |
+          last_comment=$(echo "${{ github.event.issue.body }}" | tail -n 1)
+          echo "::set-output name=last_comment::$last_comment"
+
       - name: add label
         uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ contains(github.event.comment.body, '([S|s]tale)+.*([C|c]losed)+') }}
+        if: ${{ contains(last_comment, '([S|s]tale)+.*([C|c]losed)+') }}
         with:
           labels: wontfix
