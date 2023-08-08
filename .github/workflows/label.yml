@@ -21,7 +21,10 @@ jobs:
 
       - name: Get last comment
         run: |
-          echo $( ${{ fromJSON(steps.get_comments.outputs.data) }} | tr -d '[:cntrl:]' | jq -r '.[-1].body')
+          echo "$response" | jq -r '.[].body' | while IFS= read -r comment; do
+            echo "Comment: $comment"
+            # You can perform further processing on each comment here
+          done
           
       - name: add label
         uses: actions-ecosystem/action-add-labels@v1
