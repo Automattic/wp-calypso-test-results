@@ -25,18 +25,8 @@ jobs:
           last_comment="${{ steps.last_comment.outputs.last_comment }}"
           echo "LAST_COMMENT=$last_comment" >> $GITHUB_ENV
 
-      - name: Check Last Comment with Regex
-        id: regex_match
-        run: |
-          last_comment="${{ steps.last_comment.outputs.last_comment }}"
-          if [[ "$last_comment" =~ ([S|s]tale)+.*([C|c]losed)+ ]]; then
-            echo "::set-output name=regex_matched::true"
-          else
-            echo "::set-output name=regex_matched::false"
-          fi
-
       - name: Add [Closed] Stale label
         uses: actions-ecosystem/action-add-labels@v1
-        if: steps.regex_match.outputs.regex_matched == 'true'
+        if: contains( env.LAST_COMMENT, 'Since this issue has been inactive for quite some time, KitKat has made the decision to close it.' )
         with:
           labels: wontfix
