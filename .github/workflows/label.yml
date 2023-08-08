@@ -14,7 +14,7 @@ jobs:
       - uses: octokit/request-action@v2.x
         id: get_latest_release
         with:
-          route: GET /repos/Automattic/wp-calypso-results/issues/21/comments
+          route: GET /repos/Automattic/wp-calypso-test-results/issues/21/comments
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: |
