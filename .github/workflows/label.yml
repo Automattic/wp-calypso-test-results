@@ -10,14 +10,11 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v2
-
-      - name: Get Last Comment
-        id: last_comment
-        env:
-          last_comment: ${{ "${{ github.event.issue.body }}" | tail -n 1 }}
           
       - name: add label
         uses: actions-ecosystem/action-add-labels@v1
         if: ${{ contains(env.last_comment, '([S|s]tale)+.*([C|c]losed)+') }}
+        env:
+          last_comment: ${{ "${{ github.event.issue.body }}" | tail -n 1 }}
         with:
           labels: wontfix
