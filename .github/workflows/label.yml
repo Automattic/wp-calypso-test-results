@@ -11,23 +11,21 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
 
-      - name: Get comments
-        uses: octokit/request-action@v2.x
-        id: get_comments
-        with:
-          route: GET /repos/Automattic/wp-calypso-test-results/issues/${{ github.event.issue.number }}/comments
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Get last comment
+      - name: Fetch Last Comment
+        id: last_comment
         run: |
-          echo '${{ steps.get_comments.outputs.data }}' | jq -r '.[].body' | while IFS= read -r comment; do
-            echo "Comment: $comment"
-            # You can perform further processing on each comment here
-          done
-          
+          issue_number=1  # Replace with the desired issue number
+          comments_url="https://api.github.com/repos/${{ github.repository }}/issues/${issue_number}/comments"
+          last_comment=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" $comments_url | jq -r '.[-1].body')
+          echo "::set-output name=last_comment::$last_comment"
+
+      - name: Set Last Comment as Environment Variable
+        run: |
+          last_comment="${{ steps.last_comment.outputs.last_comment }}"
+          echo "LAST_COMMENT=$last_comment" >> $GITHUB_ENV
+
       - name: add label
         uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ contains(env.LAST_COMMENT, '([S|s]tale)+.*([C|c]losed)+') }}
+        if: ${{ contains(${{env.LAST_COMMENT}}, '([S|s]tale)+.*([C|c]losed)+') }}
         with:
           labels: wontfix
