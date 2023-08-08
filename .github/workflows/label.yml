@@ -21,7 +21,7 @@ jobs:
 
       - name: Get last comment
         run: |
-          echo ${{ steps.get_comments.outputs }} | jq -r '.[].body' | while IFS= read -r comment; do
+          echo ${{ steps.get_comments.outputs.data }} | jq -r '.[].body' | while IFS= read -r comment; do
             echo "Comment: $comment"
             # You can perform further processing on each comment here
           done
