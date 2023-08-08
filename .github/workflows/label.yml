@@ -37,6 +37,6 @@ jobs:
 
       - name: add label
         uses: actions-ecosystem/action-add-labels@v1
-        if: steps.regex_match == 'true'
+        if: steps.regex_match.outputs.regex_matched == 'true'
         with:
           labels: wontfix
