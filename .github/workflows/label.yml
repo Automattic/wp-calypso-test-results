@@ -19,7 +19,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: |
           echo comment: '${{ steps.get_latest_release.outputs.data }}'
-          echo issue details: '${{ github.event }}'
+          echo issue details: '${{ github.event.issue.issue_number }}'
           
       # - name: add label
       #   uses: actions-ecosystem/action-add-labels@v1
