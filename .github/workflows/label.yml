@@ -11,18 +11,20 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
 
-      - uses: octokit/request-action@v2.x
-        id: get_latest_release
+      - name: Get comments
+        uses: octokit/request-action@v2.x
+        id: get_comments
         with:
-          route: GET /repos/Automattic/wp-calypso-test-results/issues/21/comments
+          route: GET /repos/Automattic/wp-calypso-test-results/issues/${{ github.event.issue.number }}/comments
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: |
-          echo comment: '${{ steps.get_latest_release.outputs.data }}'
-          echo issue details: '${{ github.event.issue.number }}'
+          COMMENTS=${{ steps.get_latest_release.outputs.data }}'
+          echo COMMENTS
+          LAST_COMMENT=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" $comments_url | jq -r '.[-1].body'
           
-      # - name: add label
-      #   uses: actions-ecosystem/action-add-labels@v1
-      #   if: ${{ contains(env.last_comment, '([S|s]tale)+.*([C|c]losed)+') }}
-      #   with:
-      #     labels: wontfix
+      - name: add label
+        uses: actions-ecosystem/action-add-labels@v1
+        if: ${{ contains(env.LAST_COMMENT, '([S|s]tale)+.*([C|c]losed)+') }}
+        with:
+          labels: wontfix
