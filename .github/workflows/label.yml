@@ -20,8 +20,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: |
           COMMENTS=${{ steps.get_comments.outputs.data }}
-          echo COMMENTS
           LAST_COMMENT=echo $COMMENTS | jq -r '.[-1].body
+          echo $LAST_COMMENT
           
       - name: add label
         uses: actions-ecosystem/action-add-labels@v1
