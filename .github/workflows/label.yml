@@ -28,7 +28,7 @@ jobs:
       - name: Check Last Comment with Regex
         id: regex_match
         run: |
-          if [[ ${{ steps.set_last_comment.outputs.LAST_COMMENT }}" =~ ([S|s]tale)+.*([C|c]losed)+ ]]; then
+          if [[ "${{ steps.set_last_comment.outputs.LAST_COMMENT }}" =~ ([S|s]tale)+.*([C|c]losed)+ ]]; then
             echo "::set-output name=regex_matched::true"
           else
             echo "::set-output name=regex_matched::false"
