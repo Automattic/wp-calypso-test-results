@@ -19,8 +19,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: |
-          COMMENTS=${{ steps.get_comments.outputs.data }}
-          LAST_COMMENT=echo $COMMENTS | jq -r '.[-1].body
+          echo ':set-output name=COMMENTS::${{ steps.get_comments.outputs.data }}'
+          echo ':set-output name=LAST_COMMENT::'$COMMENTS | jq -r '.[-1].body'
           echo $LAST_COMMENT
           
       - name: add label
