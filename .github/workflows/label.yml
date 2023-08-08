@@ -21,7 +21,7 @@ jobs:
       - run: |
           COMMENTS='${{ steps.get_latest_release.outputs.data }}'
           echo COMMENTS
-          LAST_COMMENT='$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" $comments_url | jq -r '.[-1].body'
+          LAST_COMMENT='echo $COMMENTS | jq -r '.[-1].body'
           
       - name: add label
         uses: actions-ecosystem/action-add-labels@v1
