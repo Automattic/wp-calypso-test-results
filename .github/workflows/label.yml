@@ -11,12 +11,21 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
 
+      - name: Get comments
+        uses: octokit/request-action@v2.x
+        id: get_comments
+        with:
+          route: GET /repos/Automattic/wp-calypso-test-results/issues/${{ github.event.issue.number }}/comments
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Fetch Last Comment
         id: last_comment
         run: |
-          issue_number=${{ github.event.issue.number }}
-          comments_url="https://api.github.com/repos/Automattic/wp-calypso-test-results/issues/${issue_number}/comments"
-          last_comment=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" $comments_url | jq -r '.[-1].body')
+          # issue_number=${{ github.event.issue.number }}
+          # comments_url="https://api.github.com/repos/Automattic/wp-calypso-test-results/issues/${issue_number}/comments"
+          # last_comment=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" $comments_url | jq -r '.[-1].body')
+          last_comment=$( ${{ steps.get_comments.outputs.data }} | jq -r '.[-1].body' )
           echo "::set-output name=last_comment::$last_comment"
 
       - name: Set Last Comment as Environment Variable
