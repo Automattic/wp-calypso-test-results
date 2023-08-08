@@ -21,8 +21,7 @@ jobs:
 
       - name: Get last comment
         run: |
-          COMMENT='${{ steps.get_comments.outputs.data }}' | tr -d '[:cntrl:]' | jq -r '.[-1].body'
-          echo "LAST_COMMENT=$COMMENT" >> "$GITHUB_ENV"
+          echo "LAST_COMMENT='${{ steps.get_comments.outputs.data }}' | tr -d '[:cntrl:]' | jq -r '.[-1].body'" >> "$GITHUB_ENV"
           
       - name: add label
         uses: actions-ecosystem/action-add-labels@v1
