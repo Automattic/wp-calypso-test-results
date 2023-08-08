@@ -20,13 +20,22 @@ jobs:
           echo "::set-output name=last_comment::$last_comment"
 
       - name: Set Last Comment as Environment Variable
+        id: set_last_comment
         run: |
           last_comment="${{ steps.last_comment.outputs.last_comment }}"
           echo "LAST_COMMENT=$last_comment" >> $GITHUB_ENV
 
+      - name: Check Last Comment with Regex
+        id: regex_match
+        run: |
+          if [[ ${{ steps.set_last_comment.outputs.LAST_COMMENT }}" =~ ([S|s]tale)+.*([C|c]losed)+ ]]; then
+            echo "::set-output name=regex_matched::true"
+          else
+            echo "::set-output name=regex_matched::false"
+          fi
+
       - name: add label
         uses: actions-ecosystem/action-add-labels@v1
-        if: contains(env.LAST_COMMENT, '([S|s]tale)+.*([C|c]losed)+')
+        if: ${{ steps.regex_match == 'true' }}
         with:
           labels: wontfix
-
