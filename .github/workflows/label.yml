@@ -22,8 +22,8 @@ jobs:
       - name: Extract last comment
         id: extract_last_comment
         run: |
-          last_comment=$( echo '${{ steps.get_comments.outputs.data }}' | jq -r '.[-1].body' )
-          echo "::set-output name=last_comment::$last_comment"
+          last_comment=$( echo '${{ steps.get_all_comments.outputs.data }}' | jq -r '.[-1].body' )
+          echo "LAST_COMMENT=$last_comment" >> $GITHUB_ENV
 
       - name: Add [Closed] Stale label
         id: add_closed_stale_label
