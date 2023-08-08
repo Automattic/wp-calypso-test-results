@@ -2,7 +2,7 @@ name: Add Label
 
 on:
   issues:
-    types: [closed]
+    types: closed
     
 jobs:
   add_label:
@@ -14,7 +14,7 @@ jobs:
       - name: Get Last Comment
         id: last_comment
         run: |
-          last_comment=$(echo "${{ github.event.issue.body }}" | tail -n 1)
+          last_comment=$(echo "${{ github.event.issue.issue.issue_number }}" | tail -n 1)
           echo "::set-output name=last_comment::$last_comment"
           
       # - name: add label
