@@ -26,7 +26,7 @@ jobs:
 
       - name: add label
         uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ contains(env.LAST_COMMENT, '([S|s]tale)+.*([C|c]losed)+') }}
+        if: contains(env.LAST_COMMENT, '([S|s]tale)+.*([C|c]losed)+')
         with:
           labels: wontfix
 
