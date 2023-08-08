@@ -1,8 +1,8 @@
 name: Add Label
 
 on:
-  issue_comment:
-    types: [created, deleted]
+  issues:
+    types: [opened, closed]
     
 jobs:
   add_label:
@@ -13,6 +13,6 @@ jobs:
 
       - name: add label
         uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ contains(github.event.comment.body, 'bug') }}
+        if: ${{ contains(github.event.comment.body, '([S|s]tale)+.*([C|c]losed)+') }}
         with:
-          labels: bug
+          labels: wontfix
