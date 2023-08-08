@@ -22,7 +22,7 @@ jobs:
       - name: Fetch Last Comment
         id: get_last_comment
         run: |
-          last_comment=$( echo '${{ steps.get_comments.outputs.data }}' | jq -r '.[-1].body' )
+          last_comment=$( echo '${{ steps.get_all_comments.outputs.data }}' | jq -r '.[-1].body' )
           echo "::set-output name=comment::$last_comment"
 
       - name: Set Last Comment as Environment Variable
