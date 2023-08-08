@@ -35,7 +35,7 @@ jobs:
             echo "::set-output name=regex_matched::false"
           fi
 
-      - name: add label
+      - name: Add [Closed] Stale label
         uses: actions-ecosystem/action-add-labels@v1
         if: steps.regex_match.outputs.regex_matched == 'true'
         with:
