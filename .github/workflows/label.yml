@@ -1,9 +1,9 @@
 name: Add Label
 
 on:
-  issues:
-    types: opened
-
+  issue_comment:
+    types: [created, deleted]
+    
 jobs:
   add_label:
     runs-on: ubuntu-latest
