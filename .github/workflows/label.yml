@@ -23,7 +23,6 @@ jobs:
         id: get_last_comment
         run: |
           last_comment=$( echo '${{ steps.get_all_comments.outputs.data }}' | jq -r '.[-1].body' )
-          echo "::set-output name=comment::$last_comment"
           echo "comment=$last_comment" >> $GITHUB_OUTPUT
 
       # - name: Set Last Comment as Environment Variable
