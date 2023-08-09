@@ -25,15 +25,9 @@ jobs:
           last_comment=$( echo '${{ steps.get_all_comments.outputs.data }}' | jq -r '.[-1].body' )
           echo comment=$last_comment >> $GITHUB_OUTPUT
 
-      # - name: Set Last Comment as Environment Variable
-      #   id: set_last_comment
-      #   run: |
-      #     comment="${{ steps.get_last_comment.outputs.comment }}"
-      #     echo "COMMENT=$comment" >> $GITHUB_ENV
-
       - name: Add [Closed] Stale label
         id: add_closed_stale_label
         uses: actions-ecosystem/action-add-labels@v1
-        if: contains( steps.get_last_comment.output.comment, 'Since this issue has been inactive for quite some time, KitKat has made the decision to close it.' )
+        if: contains( steps.get_last_comment.outputs.comment, 'Since this issue has been inactive for quite some time, KitKat has made the decision to close it.' )
         with:
           labels: wontfix
