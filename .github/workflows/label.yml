@@ -22,8 +22,11 @@ jobs:
       - name: Fetch Last Comment
         id: get_last_comment
         run: |
-          last_comment=$( echo -n '${{ steps.get_all_comments.outputs.data }}' | jq -r '.[-1].body' )
-          echo "comment=$last_comment" >> $GITHUB_OUTPUT
+          ${{ toJson(github) }}
+          ${{ toJson(job) }}
+          
+          # last_comment=$( echo '${{ steps.get_all_comments.outputs.data }}' | jq -r '.[-1].body' )
+          # echo "comment=$last_comment" >> $GITHUB_OUTPUT
 
       # - name: Set Last Comment as Environment Variable
       #   id: set_last_comment
