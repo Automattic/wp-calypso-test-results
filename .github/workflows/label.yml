@@ -24,12 +24,13 @@ jobs:
         run: |
           last_comment=$( echo '${{ steps.get_all_comments.outputs.data }}' | jq -r '.[-1].body' )
           echo "::set-output name=comment::$last_comment"
+          echo "COMMENT=$last_comment" >> $GITHUB_ENV
 
-      - name: Set Last Comment as Environment Variable
-        id: set_last_comment
-        run: |
-          comment="${{ steps.get_last_comment.outputs.comment }}"
-          echo "COMMENT=$comment" >> $GITHUB_ENV
+      # - name: Set Last Comment as Environment Variable
+      #   id: set_last_comment
+      #   run: |
+      #     comment="${{ steps.get_last_comment.outputs.comment }}"
+      #     echo "COMMENT=$comment" >> $GITHUB_ENV
 
       - name: Add [Closed] Stale label
         id: add_closed_stale_label
