@@ -1,9 +1,9 @@
-name: Add Label
+name: Add Closed Stale reason to closed issues
 
 on:
   issues:
     types: closed
-    
+
 jobs:
   add_label:
     runs-on: ubuntu-latest
@@ -11,7 +11,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
 
-      - name: Get all comments for an issue
+      - name: Get all comments on issue
         uses: octokit/request-action@v2.x
         id: get_all_comments
         with:
@@ -19,7 +19,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Fetch Last Comment
+      - name: Identify last comment
         id: get_last_comment
         run: |
           last_comment=$( echo '${{ steps.get_all_comments.outputs.data }}' | tr -d '[:cntrl:]' | jq -r '.[-1].body' )
