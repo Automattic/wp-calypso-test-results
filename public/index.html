@@ -3,16 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Results</title>
+    <title>Calypso Test Results</title>
 </head>
 <body>
-    <h1>hello, it works</h1>
-    <script>
-        if (window.location.pathname.startsWith('/wp-calypso-test-results/r/')) {
-            const path = window.location.pathname.replace('/wp-calypso-test-results/r/', '');
-            const targetUrl = 'https://a8c-calypso-e2e-reports.s3.amazonaws.com/archive/' + path;
-            window.location.href = targetUrl;
-        }
-    </script>
+    <h1>passed</h1>
 </body>
 </html>
