@@ -13,8 +13,15 @@
             document.title = 'Redirecting...';
             document.body.innerHTML = '<p>Redirecting...</p>';
             const path = window.location.pathname.replace('/wp-calypso-test-results/r/', '');
-            const targetUrl = 'https://a8c-calypso-e2e-reports.s3.amazonaws.com/archive/' + path;
-            window.location.href = targetUrl;
+            
+            // Validate path to prevent open redirect attacks
+            if (path && /^[a-zA-Z0-9._/-]+$/.test(path) && !path.includes('..') && !path.startsWith('/')) {
+                const targetUrl = 'https://a8c-calypso-e2e-reports.s3.amazonaws.com/archive/' + encodeURIComponent(path);
+                window.location.href = targetUrl;
+            } else {
+                document.title = 'Invalid Path';
+                document.body.innerHTML = '<h1>Invalid Path</h1><p>The requested path is invalid.</p>';
+            }
         }
     </script>
 </body>
