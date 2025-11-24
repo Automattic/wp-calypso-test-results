@@ -64,7 +64,8 @@ echo ""
 DELETED_COUNT=0
 TOTAL_SIZE=0
 
-aws s3 ls "$S3_PATH" --recursive | while read -r line; do
+# Use process substitution to avoid pipeline subshell
+while read -r line; do
     # Parse the line: date time size key
     FILE_DATE=$(echo "$line" | awk '{print $1}')
     FILE_TIME=$(echo "$line" | awk '{print $2}')
@@ -97,7 +98,7 @@ aws s3 ls "$S3_PATH" --recursive | while read -r line; do
         DELETED_COUNT=$((DELETED_COUNT + 1))
         TOTAL_SIZE=$((TOTAL_SIZE + FILE_SIZE))
     fi
-done
+done < <(aws s3 ls "$S3_PATH" --recursive)
 
 echo ""
 echo "Cleanup complete!"
