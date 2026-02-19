@@ -20,7 +20,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: Cleanup old report files (>15 days)
-        run: ./scripts/cleanup-old-s3-files.sh ${{ secrets.S3_BUCKET }}/ 15
+        run: ./scripts/cleanup-old-s3-files.sh ${{ secrets.AWS_S3_BUCKET_BASE_URL }}/ 15
 
       - name: Cleanup old CTRF files (>2 days)
-        run: ./scripts/cleanup-old-s3-files.sh ${{ secrets.S3_BUCKET }}/reports/ctrf/ 2
+        run: ./scripts/cleanup-old-s3-files.sh ${{ secrets.AWS_S3_BUCKET_BASE_URL }}/reports/ctrf/ 2
