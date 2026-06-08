@@ -42,14 +42,14 @@ jobs:
         run: npm install -g allure-commandline
           
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # v1.7.0
+        uses: aws-actions/configure-aws-credentials@e7f100cf4c008499ea8adda475de1042d6975c7b # v6.2.0
         with:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: Checkout this repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6.0.2
         with:
           path: ${{ env.REPO_PATH }}
           ref: 'trunk'
@@ -83,7 +83,7 @@ jobs:
         run: bash ${{ env.REPO_PATH }}/scripts/regenerate-report.sh
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v5
         with:
           # Upload the generated report
           path: ${{ env.REPORT_PATH }}
